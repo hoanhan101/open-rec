@@ -75,3 +75,29 @@ movies_per_user = rating_with_movie_info.userID.value_counts()
 user_per_movie = rating_with_movie_info.title.value_counts()
 
 print(user_per_movie.head())
+
+# Find the top N movies of a user
+def find_top_favorite_movies(user, n):
+    """
+    Find the top n movies for a given user.
+    Params:
+        user (int): User ID
+        n (n): Number of top movies
+
+    Return:
+        List of movies' titles
+
+    Steps:
+        Get a list of user that matched the ID
+        Sort the list by rating in ascending order
+        Return only the titles of the movies
+    """
+    top_movies = pd.DataFrame.sort_values(
+        rating_with_movie_info[rating_with_movie_info.userID==str(user)],
+        ['rating'],
+        ascending=[0]
+    )[:n]
+    return list(top_movies.title)
+
+print('')
+print(find_top_favorite_movies(1, 3))
