@@ -1,2 +1,2 @@
 # recommender
-Recommendation system
+**recommender** is an recommendation system.
