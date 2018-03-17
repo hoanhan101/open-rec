@@ -248,10 +248,10 @@ def find_top_n_recommendations(active_user, n):
 # data. We only have the movies' titles, movies IDs, and ratings from
 # different users.
 # The way to do it is to decompose a user's item raing matrix into 2 user
-# matrixes. One is the user-factor matrix and one is user-item matrix.
+# matrices. One is the user-factor matrix and one is user-item matrix.
 # Each row in the user-factor matrix maps the user onto the hidden factor.
 # Each row in the user-item matrix maps the item onto the hidden factor.
-# These factor may or may not any meaning in real life. They might have some
+# These factor may or may not have any meaning in real life. They might have some
 # abstract meaning. We have no ideas until we have the right factorization.
 # This operation will be pretty expensive because it will effectively give us
 # the factor vectors needed to find the rating of any item by any user.
@@ -266,14 +266,14 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
         In user item rating matrix R, each row represent an user, each column 
         represent a user's rating for an item.
         We use Stochastic gradient descent (SGD) to find the factor vectors.
-        Steps, gamma, lamda are parameters the SGD will use.
+        Steps, gamma, lamda are parameters that SGD will use.
 
     Params:
         R (array): User-item rating matrix 
         K (int): Number of factors we will find
         steps (int): Number of steps
         gamma (float): Size of the step
-        lamda (float): TODO
+        lamda (float): Value of regularization
 
     Return:
         P and Q matrix
@@ -299,9 +299,7 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
     # minimizing reaches a certain threshold.
     for step in range(steps):
         for i in R.index:
-            # print("i: {}".format(i))
             for j in R.columns:
-                # print("j: {}".format(j))
                 # For each rating that exists in the training set
                 if R.loc[i,j] > 0:
                     # This is the error for one rating.
@@ -322,7 +320,7 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
                     Q.loc[j] = Q.loc[j] + gamma*(eij*P.loc[i] - lamda*Q.loc[j])
 
         # We have looped through all the rating once.
-        # Let's check the value of the error function to see if we have
+        # Check the value of the error function to see if we have
         # reached the threshold at which we want to stop, else we will
         # repeat the process.
         e = 0
@@ -358,9 +356,14 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
 def support(items):
     """
     Support is the propotions of all users who have watched this set of movies.
+    
+    Note:
+        This is a bit confusing because we kind of mix the term array/list and
+        set together.
+        TODO: Clarify this.
 
     Params:
-        items (array or set?): Set of items
+        items (array): Set of items
 
     Return:
         A float value
