@@ -10,6 +10,7 @@ import itertools
 import numpy as np
 import pandas as pd
 
+from random import randint
 from scipy.spatial.distance import correlation
 
 # Here are the paths to our data
@@ -339,7 +340,8 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
 
         if e < 0.001:
             break
-        print(step)
+
+        print('.', end='', flush=True)
 
     return P, Q
 
@@ -383,20 +385,23 @@ def support(items):
 
 if __name__ == "__main__":
     # Nearest neighbours technique
-    # active_user = 5
-    # limit = 5
+    active_user = 10
+    limit = 10
+    collision = []
+    nearest_neighbours_store = {}
 
-    # movies = find_top_favorite_movies(active_user, limit)
-    # recommendations = find_top_n_recommendations(active_user, limit)
+    movies = find_top_favorite_movies(active_user, limit)
+    recommendations = find_top_n_recommendations(active_user, limit)
 
-    # print('Here are user {} top {} movies:'.format(active_user, limit))
-    # for movie in movies:
-    #     print(movie)
+    print('Here are user #\'s {} top {} movies:'.format(active_user, limit))
+    for movie in movies:
+        print('- {}'.format(movie))
 
-    # print('')
-    # print('Here are the top {} recommendations:'.format(limit))
-    # for item in recommendations:
-    #     print(item)
+    print('')
+    print('Using nearest neighbours technique, we found:')
+    for item in recommendations:
+        nearest_neighbours_store[item] = 1
+        print('- {}'.format(item))
 
 
     # Latent factor technique
@@ -404,23 +409,37 @@ if __name__ == "__main__":
     # This will be pretty expensive. For now, we just run it over a part of the
     # matrix to see how it works.
     (P, Q) = perform_matrix_factorization(
-        user_item_rating_matrix.iloc[:100, :100], 2, 10
+        user_item_rating_matrix.iloc[:100, :100], 2, 20
     )
 
-    active_user = 1
     predicted_ratings = pd.DataFrame(
         np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
     )
 
     # We found the ratings of all movies by the active user and 
-    # then sorted them to find the top 3 movies 
+    # then sorted them to find the top n movies 
     top_recommendations = pd.DataFrame.sort_values(
         predicted_ratings, ['Rating'], ascending=[0]
-    )[:3]
+    )[:limit]
     top_recommendations_titles = movies_data.loc[
         movies_data.movieID.isin(top_recommendations.index)
     ]
-    print(list(top_recommendations_titles.title))
+
+    print('')
+    print('Using latent factor technique, we found:')
+    for item in list(top_recommendations_titles.title):
+        if item in nearest_neighbours_store:
+            collision.append(item)
+
+        print('- {}'.format(item))
+
+    print('')
+    if len(collision) == 0:
+        print('There is no collision')
+    else:
+        print('Here are the same items that occured in both techniques:')
+        for item in collision:
+            print('- {}'.format(item))
 
     """
     # Association rule
