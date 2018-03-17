@@ -1,3 +1,11 @@
+"""
+    recommender.py - Recommendation system
+    Author: Hoanh An (hoanhan@bennington.edu)
+    Date: 03/09/18
+
+    Reference: https://www.udemy.com/recommendation-systems/
+"""
+
 import itertools
 import numpy as np
 import pandas as pd
