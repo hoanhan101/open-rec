@@ -54,8 +54,12 @@ def find_top_favorite_movies(active_user, n):
     )[:n]
     return list(top_movies.title)
 
+
 # -----------------------
 # FINDING RECOMMENDATIONS
+# -----------------------
+
+# K NEAREST NEIGHBOURS
 # -----------------------
 
 # Start by using a neighbour based collaborative filtering model.
@@ -228,7 +232,109 @@ def find_top_n_recommendations(active_user, n):
     return list(top_recommendations_titles.title)
 
 
+# MATRIX FACTORIZATION
+# -----------------------
+# Identify some hidden factors which influence user's ratings of a movie.
+# We don't know these factors are. We are not using any movies' descriptions
+# data. We only have the movies' titles, movies IDs, and ratings from
+# different users.
+# The way to do it is to decompose a user's item raing matrix into 2 user
+# matrixes. One is the user-factor matrix and one is user-item matrix.
+# Each row in the user-factor matrix maps the user onto the hidden factor.
+# Each row in the user-item matrix maps the item onto the hidden factor.
+# These factor may or may not any meaning in real life. They might have some
+# abstract meaning. We have no ideas until we have the right factorization.
+# This operation will be pretty expensive because it will effectively give us
+# the factor vectors needed to find the rating of any item by any user.
+# It will only perform once and then we will have all the ratings for all the
+# users. We then can update the matrix along the way.
+# In the previous case, we only compute for only 1 user.
+def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
+    """
+    Perform matrix factorization algorithm.
+
+    Details:
+        In user item rating matrix R, each row represent an user, each column 
+        represent a user's rating for an item.
+        We use Stochastic gradient descent (SGD) to find the factor vectors.
+        Steps, gamma, lamda are parameters the SGD will use.
+
+    Params:
+        R (array): User-item rating matrix 
+        K (int): Number of factors we will find
+        steps (int): Number of steps
+        gamma (float): Size of the step
+        lamda (float): TODO
+    """
+    # N is the number of users, M is the number of items.
+    N = len(R.index)
+    M = len(R.columns)
+
+    # We decompose R into P and Q matrix, where P is the user-facotr matrix, Q
+    # is the user-item matrix.
+
+    # P has N rows for users and K columns for items.
+    # We initialize this matrix with some random numbers, then we iteratively
+    # adjust the value of P so it moves to a place where the dot product of P
+    # and Q will be very close the the user-item matrix.
+    P = pd.DataFrame(np.random.rand(N, K), index=R.index)
+
+    # Q has M rows for items.
+    Q = pd.DataFrame(np.random.rand(M, K), index=R.columns)
+
+    # SGD loops through the ratings in the user-item rating matrix.
+    # It will do this as many times as we specify or until the error we are
+    # minimizing reaches a certain threshold.
+    for step in range(steps):
+        for i in R.index:
+            # print("i: {}".format(i))
+            for j in R.columns:
+                # print("j: {}".format(j))
+                # For each rating that exists in the training set
+                if R.loc[i,j] > 0:
+                    # This is the error for one rating.
+                    # It is the difference between the actual value of the
+                    # rating and the predicted value (dot product of the
+                    # corresponding user-factor vector and item-factor vector)
+                    eij = R.loc[i, j] - np.dot(P.loc[i], Q.loc[j])
+
+                    # We have an error function to minimize.
+                    # The Ps and Qs should be moved in the downward direction
+                    # of the slope of the vector at the current point.
+                    # The value in the brackets is the partial derivative of
+                    # the error function, i.e the slope.
+                    # Lamda is the value of the regularization parameter which
+                    # penalizes the model for the number of factors we are
+                    # finding.
+                    P.loc[i] = P.loc[i] + gamma*(eij*Q.loc[j] - lamda*P.loc[i])
+                    Q.loc[j] = Q.loc[j] + gamma*(eij*P.loc[i] - lamda*Q.loc[j])
+        # We have looped through all the rating once.
+        # Let's check the value of the error function to see if we have
+        # reached the threshold at which we want to stop, else we will
+        # repeat the process.
+        e = 0
+        for i in R.index:
+            for j in R.columns:
+                if R.loc[i, j] > 0:
+                    e = e + pow(
+                        R.loc[i,j] - np.dot(P.loc[i], Q.loc[j]), 2
+                        ) + lamda*(
+                            pow(
+                                np.linalg.norm(P.loc[i]), 2
+                            ) + pow(
+                                np.linalg.norm(Q.loc[j]), 2
+                            )
+                        )
+
+        if e < 0.001:
+            break
+        print(step)
+    return P, Q
+
+
+
 if __name__ == "__main__":
+    """
     active_user = 5
     limit = 5
 
@@ -243,3 +349,26 @@ if __name__ == "__main__":
     print('Here are the top {} recommendations:'.format(limit))
     for item in recommendations:
         print(item)
+    """
+
+    # Ideally we should run this over the entire matrix for a few 1000 steps.
+    # This will be pretty expensive. For now, we just run it over a part of the
+    # matrix to see how it works.
+    (P, Q) = perform_matrix_factorization(
+        user_item_rating_matrix.iloc[:100, :100], 2, 5
+    )
+
+    active_user = 1
+    predicted_ratings = pd.DataFrame(
+        np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
+    )
+
+    # We found the ratings of all movies by the active user and 
+    # then sorted them to find the top 3 movies 
+    top_recommendations = pd.DataFrame.sort_values(
+        predicted_ratings, ['Rating'], ascending=[0]
+    )[:3]
+    top_recommendations_titles = movies_data.loc[
+        movies_data.movieID.isin(top_recommendations.index)
+    ]
+    print(list(top_recommendations_titles.title))
