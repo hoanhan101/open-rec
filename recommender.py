@@ -1,3 +1,4 @@
+import itertools
 import numpy as np
 import pandas as pd
 
@@ -265,6 +266,9 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
         steps (int): Number of steps
         gamma (float): Size of the step
         lamda (float): TODO
+
+    Return:
+        P and Q matrix
     """
     # N is the number of users, M is the number of items.
     N = len(R.index)
@@ -308,6 +312,7 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
                     # finding.
                     P.loc[i] = P.loc[i] + gamma*(eij*Q.loc[j] - lamda*P.loc[i])
                     Q.loc[j] = Q.loc[j] + gamma*(eij*P.loc[i] - lamda*Q.loc[j])
+
         # We have looped through all the rating once.
         # Let's check the value of the error function to see if we have
         # reached the threshold at which we want to stop, else we will
@@ -329,33 +334,66 @@ def perform_matrix_factorization(R, K, steps=10, gamma=0.001, lamda=0.02):
         if e < 0.001:
             break
         print(step)
+
     return P, Q
 
+# ASSOCIATION RULE
+# -----------------------
+# Association rule normally make sense with purchases/transactions dataset.
+# The rule won't have much meaning in here, except to say a person who watched
+# movie A will also be likely to have watched B.
+# We will implement the Apriori algorithm.
+
+# How many transactions are there in R which contains the item in the set
+# that we are looking at. In order word, how many items are contained in the
+# item set? Of all users, how many have watched movies from the movie set?
+def support(items):
+    """
+    Support is the propotions of all users who have watched this set of movies.
+
+    Params:
+        items (array or set?): Set of items
+
+    Return:
+        A float value
+    """
+    users = user_item_rating_matrix.index
+    number_of_users = len(users)
+    rating_matrix = user_item_rating_matrix
+
+    for item in items:
+        # Subset the rating matrix to the set of users who have rated this item
+        rating_matrix = rating_matrix.loc[rating_matrix.loc[:, item]:0]
+        users = rating_matrix.index
+
+    # We are now left with the users who have rated all the items in the set
+    return float(len(users)) / float(number_of_users)
 
 
 if __name__ == "__main__":
-    """
-    active_user = 5
-    limit = 5
+    # Nearest neighbours technique
+    # active_user = 5
+    # limit = 5
 
-    movies = find_top_favorite_movies(active_user, limit)
-    recommendations = find_top_n_recommendations(active_user, limit)
+    # movies = find_top_favorite_movies(active_user, limit)
+    # recommendations = find_top_n_recommendations(active_user, limit)
 
-    print('Here are user {} top {} movies:'.format(active_user, limit))
-    for movie in movies:
-        print(movie)
+    # print('Here are user {} top {} movies:'.format(active_user, limit))
+    # for movie in movies:
+    #     print(movie)
 
-    print('')
-    print('Here are the top {} recommendations:'.format(limit))
-    for item in recommendations:
-        print(item)
-    """
+    # print('')
+    # print('Here are the top {} recommendations:'.format(limit))
+    # for item in recommendations:
+    #     print(item)
 
+
+    # Latent factor technique
     # Ideally we should run this over the entire matrix for a few 1000 steps.
     # This will be pretty expensive. For now, we just run it over a part of the
     # matrix to see how it works.
     (P, Q) = perform_matrix_factorization(
-        user_item_rating_matrix.iloc[:100, :100], 2, 5
+        user_item_rating_matrix.iloc[:100, :100], 2, 10
     )
 
     active_user = 1
@@ -372,3 +410,48 @@ if __name__ == "__main__":
         movies_data.movieID.isin(top_recommendations.index)
     ]
     print(list(top_recommendations_titles.title))
+
+    """
+    # Association rule
+    # Number of movies is watched by at least x% of the users.
+    all_items = []
+
+    # Minimum threshold
+    min_support = 0.3
+
+    for item in list(user_item_rating_matrix.columns):
+        items = [item]
+        if support(items) > min_support:
+            all_items.append(item)
+
+    # We are left with the items which have been rated at least by 30% of the
+    # users
+    # print(len(all_items))
+
+    # Generate rules, test again for support and confidence
+
+    # How strong the confidence between 2 items is
+    min_confidence = 0.1
+    assoc_rules = []
+    i = 2
+
+    # Generate all possible permutations of 2 items from the remaining list of
+    # movies
+    for rule in itertools.permutations(all_items, 2):
+        # Each rule is a tuple of 2 items
+        from_item = [rule[0]]
+        to_item = rule
+
+        confidence = support(to_item) / support(from_item)
+
+        if confidence > min_confidence and support(to_item) > min_support:
+            assoc_rules.append(rule)
+
+    # This will generate all possible 2-item rules which satisfy the support
+    # and confidence constraints.
+    # We can continute to write a similar bit of code for finding 3-item rules
+    # or n-item rules. At each step, make sure that every step satisfies the
+    # min confidence and min support.
+
+    print(assoc_rules)
+    """
