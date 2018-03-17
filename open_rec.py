@@ -1,7 +1,7 @@
 """
-    recommender.py - Recommendation system
+    open_rec.py - Recommendation system
     Author: Hoanh An (hoanhan@bennington.edu)
-    Date: 03/09/18
+    Date: 03/17/18
 
     Reference: https://www.udemy.com/recommendation-systems/
 """
@@ -16,7 +16,13 @@ from scipy.spatial.distance import correlation
 class OpenREC(object):
     def __init__(self, ratings_path, movies_path):
         """
-            TODO
+        Initizalize a Recommender object.
+
+        Params:
+            ratings_path: Dataset's rating path
+            movies_path: Daraset's movie path
+
+            TODO: Add more option for configurations
         """
         # Read CSV files
         self.ratings_data = pd.read_csv(ratings_path)
