@@ -231,5 +231,15 @@ def find_top_n_recommendations(active_user, n):
 if __name__ == "__main__":
     active_user = 5
     limit = 5
-    print(find_top_n_recommendations(active_user, limit))
-    print(find_top_favorite_movies(active_user, limit))
+
+    movies = find_top_favorite_movies(active_user, limit)
+    recommendations = find_top_n_recommendations(active_user, limit)
+
+    print('Here are user {} top {} movies:'.format(active_user, limit))
+    for movie in movies:
+        print(movie)
+
+    print('')
+    print('Here are the top {} recommendations:'.format(limit))
+    for item in recommendations:
+        print(item)
