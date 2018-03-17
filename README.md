@@ -1,5 +1,5 @@
-# recommender
-**recommender** is an recommendation system.
+# open-rec
+**open-rec** is a recommendation system.
 
 ## Datasets
 
