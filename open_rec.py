@@ -2,8 +2,7 @@
     open_rec.py - Recommendation system
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/17/18
-
-    Reference: https://www.udemy.com/recommendation-systems/
+    Reference: https://goo.gl/2tXUUw
 """
 
 import itertools
@@ -343,45 +342,16 @@ class OpenREC(object):
 
         return P, Q
 
-    # ASSOCIATION RULE
-    # -----------------------
-    # Association rule normally make sense with purchases/transactions dataset.
-    # The rule won't have much meaning in here, except to say a person who watched
-    # movie A will also be likely to have watched B.
-    # We will implement the Apriori algorithm.
-
-    # How many transactions are there in R which contains the item in the set
-    # that we are looking at. In order word, how many items are contained in the
-    # item set? Of all users, how many have watched movies from the movie set?
-    def support(self, items):
-        """
-        Support is the propotions of all users who have watched this set of movies.
-        
-        Note:
-            This is a bit confusing because we kind of mix the term array/list and
-            set together.
-            TODO: Clarify this.
-
-        Params:
-            items (array): Set of items
-
-        Return:
-            A float value
-        """
-        users = self.user_item_rating_matrix.index
-        number_of_users = len(users)
-        rating_matrix = self.user_item_rating_matrix
-
-        for item in items:
-            # Subset the rating matrix to the set of users who have rated this item
-            rating_matrix = rating_matrix.loc[rating_matrix.loc[:, item]:0]
-            users = rating_matrix.index
-
-        # We are now left with the users who have rated all the items in the set
-        return float(len(users)) / float(number_of_users)
-
 
 if __name__ == "__main__":
+    LOGO = """
+
+    █▀▀█ █▀▀█ █▀▀ █▀▀▄ ░ ░ █▀▀▄ █▀▀ █▀▀
+    █░░█ █░░█ █▀▀ █░░█ ▀ ▀ █░░█ █▀▀ █░░
+    ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ░ ░ ▀▀▀░ ▀▀▀ ▀▀▀
+
+    """
+
     # Here are the paths to our data
     ratings_path = 'ml-latest-small/ratings.csv'
     movies_path = 'ml-latest-small/movies.csv'
@@ -396,7 +366,9 @@ if __name__ == "__main__":
     movies = worker_1.find_top_favorite_movies(active_user, limit)
     recommendations = worker_1.find_top_n_recommendations(active_user, limit)
 
-    print('Here are user\'s #{} top {} movies:'.format(active_user, limit))
+
+    print(LOGO)
+    print('Here are user #{}\'s top {} movies:'.format(active_user, limit))
     for movie in movies:
         print('- {}'.format(movie))
 
@@ -444,47 +416,3 @@ if __name__ == "__main__":
         print('Here are the same items that occured in both techniques:')
         for item in collision:
             print('- {}'.format(item))
-
-
-    # Association rule
-    # Number of movies is watched by at least x% of the users.
-    all_items = []
-
-    # Minimum threshold
-    min_support = 0.3
-
-    for item in list(worker_1.user_item_rating_matrix.columns):
-        items = [item]
-        if worker_1.support(items) > min_support:
-            all_items.append(item)
-
-    # We are left with the items which have been rated at least by 30% of the
-    # users
-    # print(len(all_items))
-
-    # Generate rules, test again for support and confidence
-
-    # How strong the confidence between 2 items is
-    min_confidence = 0.1
-    assoc_rules = []
-    i = 2
-
-    # Generate all possible permutations of 2 items from the remaining list of
-    # movies
-    for rule in itertools.permutations(all_items, 2):
-        # Each rule is a tuple of 2 items
-        from_item = [rule[0]]
-        to_item = rule
-
-        confidence = support(to_item) / support(from_item)
-
-        if confidence > min_confidence and support(to_item) > min_support:
-            assoc_rules.append(rule)
-
-    # This will generate all possible 2-item rules which satisfy the support
-    # and confidence constraints.
-    # We can continute to write a similar bit of code for finding 3-item rules
-    # or n-item rules. At each step, make sure that every step satisfies the
-    # min confidence and min support.
-
-    print(assoc_rules)
