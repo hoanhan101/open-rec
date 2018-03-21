@@ -419,6 +419,16 @@ class OpenREC(object):
 
             print('- {}'.format(item))
 
+    def check_collision(self):
+        """
+        Check items collisions.
+
+        Params:
+            None
+
+        Return:
+            None
+        """
         print('')
         if len(self.collision) == 0:
             print('There is no collision')
@@ -433,6 +443,7 @@ def setup():
 if __name__ == "__main__":
     setup()
 
-    worker1 = OpenREC()
-    worker1.execute_nearest_neighbour(active_user=10, limit=5)
-    worker1.execute_latent_factor(active_user=10, limit=5, steps=5)
+    worker_1 = OpenREC()
+    worker_1.execute_nearest_neighbour(active_user=10, limit=5)
+    worker_1.execute_latent_factor(active_user=10, limit=5, steps=5)
+    worker_1.check_collision()
