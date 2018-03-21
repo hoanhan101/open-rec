@@ -6,6 +6,8 @@
 """
 
 import warnings
+import threading
+import datetime
 
 import itertools
 import numpy as np
@@ -16,7 +18,7 @@ from scipy.spatial.distance import correlation
 from config import *
 
 
-class OpenREC(object):
+class OpenREC():
     def __init__(self, ratings_path=default_ratings, movies_path=default_movies):
         """
         Initizalize a Recommender object.
@@ -97,7 +99,6 @@ class OpenREC(object):
             ascending=[0]
         )[:n]
         return list(top_movies.title)
-
 
     def find_similarity(self, user_1, user_2):
         """
@@ -348,36 +349,55 @@ class OpenREC(object):
 
         return P, Q
 
-    def execute_nearest_neighbour(self, active_user, limit):
+    def get_top_recommendations(self, uid, active_user, limit):
+        """
+        Get top n movies for a given user.
+
+        Params:
+            uid (int): UID
+            active_user (int): UserID
+            limit (int): Numbers of movies
+
+        Return:
+            None
+        """
+        method = 'Top Recommendation'
+        print('\n{}'.format(datetime.datetime.now()))
+        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+
+        movies = self.find_top_favorite_movies(active_user, limit)
+
+        print('\nResults:')
+        for movie in movies:
+            print('- {}'.format(movie))
+
+    def execute_nearest_neighbour(self, uid, active_user, limit):
         """
         Execute the nearest neighbour technique.
 
         Params:
+            uid (int): UID
             active_user (int): UserID
             limit (int): Number of recommendations
 
         Return:
             None
         """
-
-        movies = self.find_top_favorite_movies(active_user, limit)
+        method = 'Nearest Neighbour'
+        print('\n{}'.format(datetime.datetime.now()))
+        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             recommendations = self.find_top_n_recommendations(active_user, limit)
 
-        print('')
-        print('Here are user {}\'s top {} movies:'.format(active_user, limit))
-        for movie in movies:
-            print('- {}'.format(movie))
 
-        print('')
-        print('Using nearest neighbours technique, we found:')
+        print('\nResults:')
         for item in recommendations:
             self.nearest_neighbours_store[item] = 1
             print('- {}'.format(item))
 
-    def execute_latent_factor(self, active_user, limit, steps):
+    def execute_latent_factor(self, uid, active_user, limit, steps):
         """
         Execute latent factor technique.
         Ideally we should run this over the entire matrix for a few 1000 steps.
@@ -385,13 +405,16 @@ class OpenREC(object):
         matrix to see how it works.
 
         Params:
+            uid (int): UID
             active_user (int): UserID
             limit (int): Number of recommendations
 
         Return:
             None
         """
-        print('')
+        method = 'Latent Factor'
+        print('\n{}'.format(datetime.datetime.now()))
+        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
 
         (P, Q) = self.perform_matrix_factorization(
             self.user_item_rating_matrix.iloc[:100, :100], 2, steps
@@ -411,39 +434,112 @@ class OpenREC(object):
             self.movies_data.movieID.isin(top_recommendations.index)
         ]
 
-        print('')
-        print('Using latent factor technique, we found:')
+        print('\nResults:')
         for item in list(top_recommendations_titles.title):
             if item in self.nearest_neighbours_store:
                 self.collision.append(item)
 
             print('- {}'.format(item))
 
-    def check_collision(self):
+    def check_collision(self, uid, active_user):
         """
         Check items collisions.
 
         Params:
-            None
+            uid (int): UID
+            active_user (int): UserID
 
         Return:
             None
         """
-        print('')
+        method = 'Check Collision'
+        print('\n{}'.format(datetime.datetime.now()))
+        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+
+        print('\nResults:')
         if len(self.collision) == 0:
-            print('There is no collision')
+            print('- There is no collision')
         else:
             print('Here are the same items that occured in both techniques:')
             for item in self.collision:
                 print('- {}'.format(item))
 
-def setup():
-    print(LOGO)
+
+class Worker(threading.Thread):
+    def __init__(self, thread_id, task, user_id, limit):
+        threading.Thread.__init__(self)
+        self.thread_id = thread_id
+        self.worker = OpenREC()
+        self.task = task
+        self.user_id = user_id
+        self.limit= limit
+    def run(self):
+        thread_lock.acquire()
+        if self.task == 'nearest_neighbours':
+            self.worker.execute_nearest_neighbour(uid=self.thread_id, 
+                                                  active_user=self.user_id, 
+                                                  limit=self.limit)
+        elif self.task == 'latent_factor':
+            self.worker.execute_latent_factor(uid=self.thread_id, 
+                                              active_user=self.user_id, 
+                                              limit=self.limit, 
+                                              steps=3)
+        elif self.task == 'top_recommendations':
+            self.worker.get_top_recommendations(uid=self.thread_id, 
+                                                active_user=self.user_id, 
+                                                limit=self.limit)
+        elif self.task == 'check_collision':
+            self.worker.check_collision(uid=self.thread_id, 
+                                        active_user=self.user_id)
+        else:
+            print('Unavaiable command')
+
+        thread_lock.release()
 
 if __name__ == "__main__":
-    setup()
+    print(LOGO)
 
-    worker_1 = OpenREC()
-    worker_1.execute_nearest_neighbour(active_user=10, limit=5)
-    worker_1.execute_latent_factor(active_user=10, limit=5, steps=5)
-    worker_1.check_collision()
+    NUMS_WORKERS = 2
+    LIMIT = 5
+
+    thread_lock = threading.Lock()
+    threads = []
+
+
+    for i in range(NUMS_WORKERS):
+        random_id = np.random.randint(1, 10)
+        worker_LT = Worker(thread_id=i, 
+                           task='latent_factor',
+                           user_id=random_id, 
+                           limit=LIMIT)
+
+        worker_NN = Worker(thread_id=i,
+                             task='nearest_neighbours',
+                             user_id=random_id,
+                             limit=LIMIT)
+
+        worker_TR = Worker(thread_id=i,
+                             task='top_recommendations',
+                             user_id=random_id,
+                             limit=LIMIT)
+
+        worker_CC = Worker(thread_id=i,
+                             task='check_collision',
+                             user_id=random_id,
+                             limit=LIMIT)
+
+        worker_LT.start()
+        worker_NN.start()
+        worker_TR.start()
+        worker_CC.start()
+
+        threads.append(worker_LT)
+        threads.append(worker_NN)
+        threads.append(worker_TR)
+        threads.append(worker_CC)
+
+
+    for t in threads:
+        t.join()
+
+    print("\nExit main successfully.")
