@@ -5,15 +5,19 @@
     Reference: https://goo.gl/2tXUUw
 """
 
+import warnings
+
 import itertools
 import numpy as np
 import pandas as pd
-
 from random import randint
 from scipy.spatial.distance import correlation
 
+from config import *
+
+
 class OpenREC(object):
-    def __init__(self, ratings_path, movies_path):
+    def __init__(self, ratings_path=default_ratings, movies_path=default_movies):
         """
         Initizalize a Recommender object.
 
@@ -44,13 +48,12 @@ class OpenREC(object):
         if self.ratings_data.timestamp.dtypes != 'int64':
             raise TypeError
 
-        # -----------------------
-        # FINDING RECOMMENDATIONS
-        # -----------------------
+        # Persistent state
+        self.collision = []
+        self.nearest_neighbours_store = {}
 
         # K NEAREST NEIGHBOURS
         # -----------------------
-
         # Start by using a neighbour based collaborative filtering model.
         # Need to find the k nearest neighbours of a user and use their ratings to
         # predict ratings of the active user for movies they haven't rated yet.
@@ -96,12 +99,14 @@ class OpenREC(object):
         return list(top_movies.title)
 
 
-    # Now each user has been represented using their ratings.
-    # Need to find the similarity between 2 users.
-    # Use a correlation.
     def find_similarity(self, user_1, user_2):
         """
         Compute the similarity between 2 users.
+
+        Details:
+            Now each user has been represented using their ratings.
+            Need to find the similarity between 2 users.
+            Use a correlation.
 
         Params:
             user_1 (array): User 1's vector
@@ -136,13 +141,15 @@ class OpenREC(object):
             user_2 = np.array([user_2[i] for i in common_movieIDs])
             return correlation(user_1, user_2)
 
-    # We have a function to compute the similarity between 2 users, we can use this
-    # to computer the similarity between the active user and every other users and
-    # find the nearest neighbours of the active user.
     def find_nearest_neighbour_ratings(self, active_user, k):
         """
         Find k nearest neighbour of the active user then use their ratings to
         predict the active users rating for other movies.
+
+        Details:
+            We have a function to compute the similarity between 2 users, we can use this
+            to computer the similarity between the active user and every other users and
+            find the nearest neighbours of the active user.
 
         Params:
             active_user (array): User's vector
@@ -237,7 +244,6 @@ class OpenREC(object):
         )
 
         return list(top_recommendations_titles.title)
-
 
     # MATRIX FACTORIZATION
     # -----------------------
@@ -342,77 +348,91 @@ class OpenREC(object):
 
         return P, Q
 
+    def execute_nearest_neighbour(self, active_user, limit):
+        """
+        Execute the nearest neighbour technique.
+
+        Params:
+            active_user (int): UserID
+            limit (int): Number of recommendations
+
+        Return:
+            None
+        """
+
+        movies = self.find_top_favorite_movies(active_user, limit)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            recommendations = self.find_top_n_recommendations(active_user, limit)
+
+        print('')
+        print('Here are user {}\'s top {} movies:'.format(active_user, limit))
+        for movie in movies:
+            print('- {}'.format(movie))
+
+        print('')
+        print('Using nearest neighbours technique, we found:')
+        for item in recommendations:
+            self.nearest_neighbours_store[item] = 1
+            print('- {}'.format(item))
+
+    def execute_latent_factor(self, active_user, limit, steps):
+        """
+        Execute latent factor technique.
+        Ideally we should run this over the entire matrix for a few 1000 steps.
+        This will be pretty expensive. For now, we just run it over a part of the
+        matrix to see how it works.
+
+        Params:
+            active_user (int): UserID
+            limit (int): Number of recommendations
+
+        Return:
+            None
+        """
+        print('')
+
+        (P, Q) = self.perform_matrix_factorization(
+            self.user_item_rating_matrix.iloc[:100, :100], 2, steps
+        )
+
+        predicted_ratings = pd.DataFrame(
+            np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
+        )
+
+        # We found the ratings of all movies by the active user and 
+        # then sorted them to find the top n movies 
+        top_recommendations = pd.DataFrame.sort_values(
+            predicted_ratings, ['Rating'], ascending=[0]
+        )[:limit]
+
+        top_recommendations_titles = self.movies_data.loc[
+            self.movies_data.movieID.isin(top_recommendations.index)
+        ]
+
+        print('')
+        print('Using latent factor technique, we found:')
+        for item in list(top_recommendations_titles.title):
+            if item in self.nearest_neighbours_store:
+                self.collision.append(item)
+
+            print('- {}'.format(item))
+
+        print('')
+        if len(self.collision) == 0:
+            print('There is no collision')
+        else:
+            print('Here are the same items that occured in both techniques:')
+            for item in self.collision:
+                print('- {}'.format(item))
+
+def setup():
+    print(LOGO)
 
 if __name__ == "__main__":
-    LOGO = """
+    setup()
 
-    █▀▀█ █▀▀█ █▀▀ █▀▀▄ ░ ░ █▀▀▄ █▀▀ █▀▀
-    █░░█ █░░█ █▀▀ █░░█ ▀ ▀ █░░█ █▀▀ █░░
-    ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ░ ░ ▀▀▀░ ▀▀▀ ▀▀▀
-
-    """
-
-    # Here are the paths to our data
-    ratings_path = 'ml-latest-small/ratings.csv'
-    movies_path = 'ml-latest-small/movies.csv'
-
-    active_user = 10
-    limit = 10
-    collision = []
-    nearest_neighbours_store = {}
-
-    worker_1 = OpenREC(ratings_path, movies_path)
-
-    movies = worker_1.find_top_favorite_movies(active_user, limit)
-    recommendations = worker_1.find_top_n_recommendations(active_user, limit)
-
-
-    print(LOGO)
-    print('Here are user #{}\'s top {} movies:'.format(active_user, limit))
-    for movie in movies:
-        print('- {}'.format(movie))
-
-    print('')
-    print('Using nearest neighbours technique, we found:')
-    for item in recommendations:
-        nearest_neighbours_store[item] = 1
-        print('- {}'.format(item))
-
-
-    # Latent factor technique
-    # Ideally we should run this over the entire matrix for a few 1000 steps.
-    # This will be pretty expensive. For now, we just run it over a part of the
-    # matrix to see how it works.
-    (P, Q) = worker_1.perform_matrix_factorization(
-        worker_1.user_item_rating_matrix.iloc[:100, :100], 2, 20
-    )
-
-    predicted_ratings = pd.DataFrame(
-        np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
-    )
-
-    # We found the ratings of all movies by the active user and 
-    # then sorted them to find the top n movies 
-    top_recommendations = pd.DataFrame.sort_values(
-        predicted_ratings, ['Rating'], ascending=[0]
-    )[:limit]
-
-    top_recommendations_titles = worker_1.movies_data.loc[
-        worker_1.movies_data.movieID.isin(top_recommendations.index)
-    ]
-
-    print('')
-    print('Using latent factor technique, we found:')
-    for item in list(top_recommendations_titles.title):
-        if item in nearest_neighbours_store:
-            collision.append(item)
-
-        print('- {}'.format(item))
-
-    print('')
-    if len(collision) == 0:
-        print('There is no collision')
-    else:
-        print('Here are the same items that occured in both techniques:')
-        for item in collision:
-            print('- {}'.format(item))
+    worker1 = OpenREC()
+    worker1.execute_nearest_neighbour(active_user=10, limit=5)
+    worker1.execute_latent_factor(active_user=10, limit=5, steps=5)
