@@ -99,3 +99,10 @@ I don't know yet.
 Here are the same items that occured in both techniques:
 - Seven (a.k.a. Se7en) (1995)
 ```
+
+## TODO
+- Change top_recommendations to top_favotires
+- Use threading to execute tasks in parallel to serve resutls quicker
+- Figure out the reason numpy blocks
+- Calculate matrix factorization once and save the return values to reuse
+  during a session, since it's super expensive.
