@@ -360,14 +360,19 @@ class OpenREC():
             limit (int): Numbers of movies
 
         Return:
-            None
+            List of items
         """
         self.debug(method='Top Recommendation', uid=uid, active_user=active_user)
+
+        results = []
 
         movies = self.find_top_favorite_movies(active_user, limit)
 
         for movie in movies:
+            results.append(movie)
             print('- {}'.format(movie))
+
+        return results
 
     def execute_nearest_neighbour(self, uid, active_user, limit):
         """
@@ -379,9 +384,11 @@ class OpenREC():
             limit (int): Number of recommendations
 
         Return:
-            None
+            List of items
         """
         self.debug(method='Nearest Neighbour', uid=uid, active_user=active_user)
+
+        results = []
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -390,7 +397,10 @@ class OpenREC():
 
         for item in recommendations:
             self.nearest_neighbours_store[item] = 1
+            results.append(item)
             print('- {}'.format(item))
+
+        return results
 
     def execute_latent_factor(self, uid, active_user, limit, steps):
         """
@@ -405,9 +415,11 @@ class OpenREC():
             limit (int): Number of recommendations
 
         Return:
-            None
+            List of items
         """
         self.debug(method='Latent Factor', uid=uid, active_user=active_user)
+
+        results = []
 
         (P, Q) = self.perform_matrix_factorization(
             self.user_item_rating_matrix.iloc[:100, :100], 2, steps
@@ -431,7 +443,10 @@ class OpenREC():
             if item in self.nearest_neighbours_store:
                 self.collision.append(item)
 
+            results.append(item)
             print('- {}'.format(item))
+
+        return results
 
     def check_collision(self, uid, active_user):
         """
@@ -442,16 +457,21 @@ class OpenREC():
             active_user (int): UserID
 
         Return:
-            None
+            List of items
         """
         self.debug(method='Check Collision', uid=uid, active_user=active_user)
+
+        results = []
 
         if len(self.collision) == 0:
             print('- There is no collision')
         else:
             print('Here are the same items that occured in both techniques:')
             for item in self.collision:
+                results.append(item)
                 print('- {}'.format(item))
+
+        return results
 
     def debug(self, method, uid, active_user):
         """
@@ -479,24 +499,25 @@ class Worker(threading.Thread):
         self.user_id = user_id
         self.limit= limit
         self.daemon = True
+        self.data = []
     def run(self):
         thread_lock.acquire()
         if self.task == 'nearest_neighbours':
-            self.worker.execute_nearest_neighbour(uid=self.thread_id, 
-                                                  active_user=self.user_id, 
-                                                  limit=self.limit)
+            self.data = self.worker.execute_nearest_neighbour(uid=self.thread_id, 
+                                                              active_user=self.user_id, 
+                                                              limit=self.limit)
         elif self.task == 'latent_factor':
-            self.worker.execute_latent_factor(uid=self.thread_id, 
-                                              active_user=self.user_id, 
-                                              limit=self.limit, 
-                                              steps=3)
+            self.data = self.worker.execute_latent_factor(uid=self.thread_id, 
+                                                          active_user=self.user_id, 
+                                                          limit=self.limit, 
+                                                          steps=3)
         elif self.task == 'top_recommendations':
-            self.worker.get_top_recommendations(uid=self.thread_id, 
-                                                active_user=self.user_id, 
-                                                limit=self.limit)
+            self.data = self.worker.get_top_recommendations(uid=self.thread_id, 
+                                                            active_user=self.user_id, 
+                                                            limit=self.limit)
         elif self.task == 'check_collision':
-            self.worker.check_collision(uid=self.thread_id, 
-                                        active_user=self.user_id)
+            self.data = self.worker.check_collision(uid=self.thread_id, 
+                                                    active_user=self.user_id)
         else:
             print('\nUnavaiable command')
 
@@ -508,9 +529,9 @@ if __name__ == "__main__":
     start_time = time.time() 
     print(LOGO)
 
-    NUMS_WORKERS = 5
-    NUMS_RECOMMENDATIONS = 5
-    MAX_ID = 100
+    NUMS_WORKERS = 2
+    NUMS_RECOMMENDATIONS = 3
+    MAX_ID = 10
 
     thread_lock = threading.Lock()
     threads = []
@@ -548,7 +569,13 @@ if __name__ == "__main__":
         threads.append(worker_LT)
         threads.append(worker_CC)
 
-    for t in threads:
-        t.join()
+        for t in threads:
+            t.join()
+
+        print('')
+        print('worker_TR: {}'.format(worker_TR.data))
+        print('worker_NN: {}'.format(worker_NN.data))
+        print('worker_LT: {}'.format(worker_LT.data))
+        print('worker_CC: {}'.format(worker_CC.data))
 
     print('\nExit code 0. Runtime={}'.format(time.time() - start_time))
