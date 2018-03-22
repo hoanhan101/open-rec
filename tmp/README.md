@@ -104,5 +104,7 @@ Here are the same items that occured in both techniques:
 - Change top_recommendations to top_favotires
 - Use threading to execute tasks in parallel to serve resutls quicker
 - Figure out the reason numpy blocks
+  > Maybe it doesn't block. Maybe the locking causes the problem.
 - Calculate matrix factorization once and save the return values to reuse
   during a session, since it's super expensive.
+- Refactor steps in matrix factorization
