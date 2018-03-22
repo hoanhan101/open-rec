@@ -82,9 +82,14 @@ Using latent factor technique, we found:
 - Mr. Holland's Opus (1995)
 ```
 
-I am not sure why *Toy Story (1995)* is occured 3 times in the beginning of the
+I am not sure why *Toy Story (1995)* is occurred 3 times in the beginning of the
 list. Is it because of the list is unsorted/sorted? What about the logic of the
 algorithm? Is it supposed to do so?
+
+> *Assumption:* Because I run it 3 times separately, it calculates the matrix
+> factorization 3 times and produces different result for each time. If I run
+> it once and reuse the result, then I should have the same set of
+> recommendations for the same user.
 
 *Mr. Holland's Opus (1995)* appears 2 time near the end. Is it a coincidence?
 I don't know yet.
