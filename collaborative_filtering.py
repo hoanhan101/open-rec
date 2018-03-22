@@ -1,5 +1,5 @@
 """
-    recommender.py - Recommendation system
+    collaborative_filtering.py - Collaborative Filtering Algorithm
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/09/18
 
