@@ -1,5 +1,5 @@
 """
-    open_rec.py - Recommender's logic
+    open_rec.py - Recommender Logic
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/17/18
     Reference: https://goo.gl/2tXUUw
@@ -445,7 +445,7 @@ class OpenREC():
 
         return results
 
-    def check_collision(self, uid, active_user):
+    def check_collisions(self, uid, active_user):
         """
         Check items collisions.
 

@@ -1,5 +1,5 @@
 """
-    worker.py - OpenREC's Worker
+    worker.py - OpenREC Worker
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/22/18
 """
@@ -64,8 +64,8 @@ class Worker(threading.Thread):
             self.data = self.worker.get_top_favorites(uid=self.thread_id, 
                                                             active_user=self.user_id, 
                                                             limit=self.limit)
-        elif self.task == 'check_collision':
-            self.data = self.worker.check_collision(uid=self.thread_id, 
+        elif self.task == 'collisions':
+            self.data = self.worker.check_collisions(uid=self.thread_id, 
                                                     active_user=self.user_id)
         else:
             print('\nUnavaiable command')
@@ -105,7 +105,7 @@ if __name__ == "__main__":
                            limit=NUMS_RECOMMENDATIONS)
 
         worker_CC = Worker(thread_id=i,
-                             task='check_collision',
+                             task='collisions',
                              user_id=random_id,
                              limit=NUMS_RECOMMENDATIONS)
 
