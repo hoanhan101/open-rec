@@ -49,17 +49,16 @@ class Worker(threading.Thread):
         Return:
             None
         """
-        thread_lock.acquire()
+        # thread_lock.acquire()
 
         if self.task == 'nearest_neighbours':
             self.data = self.worker.execute_nearest_neighbour(uid=self.thread_id, 
                                                               active_user=self.user_id, 
                                                               limit=self.limit)
-        elif self.task == 'latent_factor':
+        elif self.task == 'latent_factors':
             self.data = self.worker.execute_latent_factor(uid=self.thread_id, 
                                                           active_user=self.user_id, 
-                                                          limit=self.limit, 
-                                                          steps=3)
+                                                          limit=self.limit)
         elif self.task == 'top_favorites':
             self.data = self.worker.get_top_favorites(uid=self.thread_id, 
                                                             active_user=self.user_id, 
@@ -70,18 +69,14 @@ class Worker(threading.Thread):
         else:
             print('\nUnavaiable command')
 
-        thread_lock.release()
+        # thread_lock.release()
 
 
 if __name__ == "__main__":
     start_time = time.time() 
     print(LOGO)
 
-    NUMS_WORKERS = 2
-    NUMS_RECOMMENDATIONS = 5
-    MAX_ID = 10
-
-    thread_lock = threading.Lock()
+    # thread_lock = threading.Lock()
     threads = []
 
     # Run n numbers of worker in parallel.
@@ -90,24 +85,24 @@ if __name__ == "__main__":
         random_id = np.random.randint(1, MAX_ID)
 
         worker_TR = Worker(thread_id=i,
-                             task='top_favorites',
-                             user_id=random_id,
-                             limit=NUMS_RECOMMENDATIONS)
+                           task='top_favorites',
+                           user_id=random_id,
+                           limit=NUMS_RECOMMENDATIONS)
 
         worker_NN = Worker(thread_id=i,
-                             task='nearest_neighbours',
-                             user_id=random_id,
-                             limit=NUMS_RECOMMENDATIONS)
+                           task='nearest_neighbours',
+                           user_id=random_id,
+                           limit=NUMS_RECOMMENDATIONS)
 
         worker_LT = Worker(thread_id=i, 
-                           task='latent_factor',
+                           task='latent_factors',
                            user_id=random_id, 
                            limit=NUMS_RECOMMENDATIONS)
 
         worker_CC = Worker(thread_id=i,
-                             task='collisions',
-                             user_id=random_id,
-                             limit=NUMS_RECOMMENDATIONS)
+                           task='collisions',
+                           user_id=random_id,
+                           limit=NUMS_RECOMMENDATIONS)
 
         worker_TR.start()
         worker_NN.start()
