@@ -8,6 +8,7 @@
 import warnings
 import threading
 import datetime
+import time
 
 import itertools
 import numpy as np
@@ -345,7 +346,7 @@ class OpenREC():
             if e < 0.001:
                 break
 
-            print('.', end='', flush=True)
+            # print('.', end='', flush=True)
 
         return P, Q
 
@@ -361,13 +362,10 @@ class OpenREC():
         Return:
             None
         """
-        method = 'Top Recommendation'
-        print('\n{}'.format(datetime.datetime.now()))
-        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+        self.debug(method='Top Recommendation', uid=uid, active_user=active_user)
 
         movies = self.find_top_favorite_movies(active_user, limit)
 
-        print('\nResults:')
         for movie in movies:
             print('- {}'.format(movie))
 
@@ -383,16 +381,13 @@ class OpenREC():
         Return:
             None
         """
-        method = 'Nearest Neighbour'
-        print('\n{}'.format(datetime.datetime.now()))
-        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+        self.debug(method='Nearest Neighbour', uid=uid, active_user=active_user)
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             recommendations = self.find_top_n_recommendations(active_user, limit)
 
 
-        print('\nResults:')
         for item in recommendations:
             self.nearest_neighbours_store[item] = 1
             print('- {}'.format(item))
@@ -412,9 +407,7 @@ class OpenREC():
         Return:
             None
         """
-        method = 'Latent Factor'
-        print('\n{}'.format(datetime.datetime.now()))
-        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+        self.debug(method='Latent Factor', uid=uid, active_user=active_user)
 
         (P, Q) = self.perform_matrix_factorization(
             self.user_item_rating_matrix.iloc[:100, :100], 2, steps
@@ -434,7 +427,6 @@ class OpenREC():
             self.movies_data.movieID.isin(top_recommendations.index)
         ]
 
-        print('\nResults:')
         for item in list(top_recommendations_titles.title):
             if item in self.nearest_neighbours_store:
                 self.collision.append(item)
@@ -452,17 +444,30 @@ class OpenREC():
         Return:
             None
         """
-        method = 'Check Collision'
-        print('\n{}'.format(datetime.datetime.now()))
-        print('Worker: {}, UserID: {}, Method: {}'.format(uid, active_user, method))
+        self.debug(method='Check Collision', uid=uid, active_user=active_user)
 
-        print('\nResults:')
         if len(self.collision) == 0:
             print('- There is no collision')
         else:
             print('Here are the same items that occured in both techniques:')
             for item in self.collision:
                 print('- {}'.format(item))
+
+    def debug(self, method, uid, active_user):
+        """
+        Print custom debugging message
+
+        Params:
+            TODO
+
+        Return:
+            None
+        """
+        print('\n{} - Worker: {}, UserID: {}, Method: {}'.format(datetime.datetime.now(), 
+                                                                 uid,
+                                                                 active_user,
+                                                                 method))
+
 
 
 class Worker(threading.Thread):
@@ -473,6 +478,7 @@ class Worker(threading.Thread):
         self.task = task
         self.user_id = user_id
         self.limit= limit
+        self.daemon = True
     def run(self):
         thread_lock.acquire()
         if self.task == 'nearest_neighbours':
@@ -492,58 +498,57 @@ class Worker(threading.Thread):
             self.worker.check_collision(uid=self.thread_id, 
                                         active_user=self.user_id)
         else:
-            print('Unavaiable command')
+            print('\nUnavaiable command')
 
         thread_lock.release()
 
 
 
 if __name__ == "__main__":
+    start_time = time.time() 
     print(LOGO)
 
-    NUMS_WORKERS = 2
-    LIMIT = 5
+    NUMS_WORKERS = 5
+    NUMS_RECOMMENDATIONS = 5
+    MAX_ID = 100
 
     thread_lock = threading.Lock()
     threads = []
 
-
-    # TODO: What is blocking? Why?
-
     for i in range(NUMS_WORKERS):
-        random_id = np.random.randint(1, 10)
-        worker_LT = Worker(thread_id=i, 
-                           task='latent_factor',
-                           user_id=random_id, 
-                           limit=LIMIT)
-
-        worker_NN = Worker(thread_id=i,
-                             task='nearest_neighbours',
-                             user_id=random_id,
-                             limit=LIMIT)
+        random_id = np.random.randint(1, MAX_ID)
 
         worker_TR = Worker(thread_id=i,
                              task='top_recommendations',
                              user_id=random_id,
-                             limit=LIMIT)
+                             limit=NUMS_RECOMMENDATIONS)
+
+        worker_NN = Worker(thread_id=i,
+                             task='nearest_neighbours',
+                             user_id=random_id,
+                             limit=NUMS_RECOMMENDATIONS)
+
+        worker_LT = Worker(thread_id=i, 
+                           task='latent_factor',
+                           user_id=random_id, 
+                           limit=NUMS_RECOMMENDATIONS)
 
         worker_CC = Worker(thread_id=i,
                              task='check_collision',
                              user_id=random_id,
-                             limit=LIMIT)
+                             limit=NUMS_RECOMMENDATIONS)
 
-        worker_LT.start()
-        worker_NN.start()
         worker_TR.start()
+        worker_NN.start()
+        worker_LT.start()
         worker_CC.start()
 
-        threads.append(worker_LT)
-        threads.append(worker_NN)
         threads.append(worker_TR)
+        threads.append(worker_NN)
+        threads.append(worker_LT)
         threads.append(worker_CC)
-
 
     for t in threads:
         t.join()
 
-    print("\nDeadlock is a b!tch lalala")
+    print('\nExit code 0. Runtime={}'.format(time.time() - start_time))
