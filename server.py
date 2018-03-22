@@ -48,20 +48,13 @@ def find(number):
                        user_id=number, 
                        limit=NUMS_RECOMMENDATIONS)
 
-    worker_CC = Worker(thread_id=3,
-                       task='collisions',
-                       user_id=number,
-                       limit=NUMS_RECOMMENDATIONS)
-
     worker_TF.start()
     worker_NN.start()
     worker_LT.start()
-    worker_CC.start()
 
     threads.append(worker_TF)
     threads.append(worker_NN)
     threads.append(worker_LT)
-    threads.append(worker_CC)
 
     for t in threads:
         t.join()
@@ -70,8 +63,7 @@ def find(number):
         'header': 'User {}\'s profile'.format(number),
         'top_favorites': worker_TF.data,
         'nearest_neighbours': worker_NN.data,
-        'latent_factors': worker_LT.data,
-        'collisions': worker_CC.data
+        'latent_factors': worker_LT.data
     }
 
     return render_template('user.html', data=response)
