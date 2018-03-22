@@ -252,7 +252,7 @@ class OpenREC():
     # We don't know these factors are. We are not using any movies' descriptions
     # data. We only have the movies' titles, movies IDs, and ratings from
     # different users.
-    # The way to do it is to decompose a user's item raing matrix into 2 user
+    # The way to do it is to decompose a user's item rating matrix into 2 user
     # matrices. One is the user-factor matrix and one is user-item matrix.
     # Each row in the user-factor matrix maps the user onto the hidden factor.
     # Each row in the user-item matrix maps the item onto the hidden factor.
@@ -496,6 +496,8 @@ class Worker(threading.Thread):
 
         thread_lock.release()
 
+
+
 if __name__ == "__main__":
     print(LOGO)
 
@@ -505,6 +507,8 @@ if __name__ == "__main__":
     thread_lock = threading.Lock()
     threads = []
 
+
+    # TODO: What is blocking? Why?
 
     for i in range(NUMS_WORKERS):
         random_id = np.random.randint(1, 10)
@@ -542,4 +546,4 @@ if __name__ == "__main__":
     for t in threads:
         t.join()
 
-    print("\nExit main successfully.")
+    print("\nDeadlock is a b!tch lalala")
