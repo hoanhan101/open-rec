@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!--Reload page every x second-->
-    <meta http-equiv="refresh" content="7">
+    <!-- <meta http-equiv="refresh" content="7"> -->
 
     <title>OpenREC</title>
 
@@ -46,10 +46,34 @@
                 </div>
                 <div style="padding: 0px;" class="container">
                     <br>
+
                     <h4>Top Favorites</h4>
-                    {% for i in data['top_recommendations'] %}
+                    <ul>
+                    {% for i in data['top_favorites'] %}
                         <li>{{i}}</li>
                     {% endfor %}
+                    </ul>
+
+                    <h4>Nearest Neighbours</h4>
+                    <ul>
+                    {% for i in data['nearest_neighbours'] %}
+                        <li>{{i}}</li>
+                    {% endfor %}
+                    </ul>
+
+                    <h4>Latent Factors</h4>
+                    <ul>
+                    {% for i in data['latent_factors'] %}
+                        <li>{{i}}</li>
+                    {% endfor %}
+                    </ul>
+
+                    <h4>Collisions</h4>
+                    <ul>
+                    {% for i in data['collisions'] %}
+                        <li>{{i}}</li>
+                    {% endfor %}
+                    </ul>
                 </div>
             </div>
         {% else %}
