@@ -7,7 +7,7 @@ used in big system, such as Netflix, Youtube, Amazon,...
 
 ### K Nearest Neighbours
 
-Our goal is to find the k nearest neighbours of a user and use their ratings to
+The goal is to find the k nearest neighbours of a user and use their ratings to
 predict ratings of the active user for items they haven't rated yet.
 
 ### Matrix Factorization
