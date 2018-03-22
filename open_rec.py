@@ -347,7 +347,7 @@ class OpenREC():
 
         return P, Q
 
-    def get_top_recommendations(self, uid, active_user, limit):
+    def get_top_favorites(self, uid, active_user, limit):
         """
         Get top n movies for a given user.
 
@@ -359,7 +359,7 @@ class OpenREC():
         Return:
             List of items
         """
-        self.debug(method='Top Recommendation', uid=uid, active_user=active_user)
+        self.debug(method='Top Favorites', uid=uid, active_user=active_user)
 
         results = []
 
