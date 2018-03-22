@@ -17,7 +17,7 @@ from config import *
 
 
 class OpenREC():
-    def __init__(self, ratings_path=default_ratings, movies_path=default_movies):
+    def __init__(self, ratings_path=RATINGS_PATH, movies_path=MOVIES_PATH):
         """
         Initizalize a Recommender object.
 
@@ -25,7 +25,8 @@ class OpenREC():
             ratings_path: Dataset's rating path
             movies_path: Daraset's movie path
 
-            TODO: Add more option for configurations
+        Return:
+            None
         """
         # Read CSV files
         self.ratings_data = pd.read_csv(ratings_path)
@@ -49,7 +50,7 @@ class OpenREC():
             raise TypeError
 
         # Persistent state
-        self.collision = []
+        self.collisions = []
         self.nearest_neighbours_store = {}
 
         # K NEAREST NEIGHBOURS
@@ -79,17 +80,18 @@ class OpenREC():
     def find_top_favorite_movies(self, active_user, n):
         """
         Find the top n movies for a given user.
-        Params:
-            active_user (int): User ID
-            n (n): Number of top movies
 
-        Return:
-            List of movies' titles
-
-        Steps:
+        Details:
             Get a list of user that matched the ID
             Sort the list by rating in ascending order
             Return only the titles of the movies
+
+        Params:
+            active_user (int): User ID
+            n (int): Number of top movies
+
+        Return:
+            List of movies' titles
         """
         top_movies = pd.DataFrame.sort_values(
             self.ratings_data[self.ratings_data.userID==active_user],
@@ -261,7 +263,8 @@ class OpenREC():
     # It will only perform once and then we will have all the ratings for all the
     # users. We then can update the matrix along the way.
     # In the previous case, we only compute for only 1 user.
-    def perform_matrix_factorization(self, R, K, steps=10, gamma=0.001, lamda=0.02):
+    def perform_matrix_factorization(self, R, K, steps=MF_STEPS,
+                                     gamma=MF_GAMMA, lamda=MF_LAMDA):
         """
         Perform matrix factorization algorithm.
 
@@ -279,7 +282,7 @@ class OpenREC():
             lamda (float): Value of regularization
 
         Return:
-            P and Q matrix
+            P and Q matrix (array)
         """
         # N is the number of users, M is the number of items.
         N = len(R.index)
@@ -383,7 +386,7 @@ class OpenREC():
         Return:
             List of items
         """
-        self.debug(method='Nearest Neighbour', uid=uid, active_user=active_user)
+        self.debug(method='Nearest Neighbours', uid=uid, active_user=active_user)
 
         results = []
 
@@ -399,7 +402,7 @@ class OpenREC():
 
         return results
 
-    def execute_latent_factor(self, uid, active_user, limit, steps):
+    def execute_latent_factor(self, uid, active_user, limit):
         """
         Execute latent factor technique.
         Ideally we should run this over the entire matrix for a few 1000 steps.
@@ -414,12 +417,12 @@ class OpenREC():
         Return:
             List of items
         """
-        self.debug(method='Latent Factor', uid=uid, active_user=active_user)
+        self.debug(method='Latent Factors', uid=uid, active_user=active_user)
 
         results = []
 
         (P, Q) = self.perform_matrix_factorization(
-            self.user_item_rating_matrix.iloc[:100, :100], 2, steps
+            self.user_item_rating_matrix.iloc[:100, :100], 2
         )
 
         predicted_ratings = pd.DataFrame(
@@ -438,7 +441,7 @@ class OpenREC():
 
         for item in list(top_recommendations_titles.title):
             if item in self.nearest_neighbours_store:
-                self.collision.append(item)
+                self.collisions.append(item)
 
             results.append(item)
             print('- {}'.format(item))
@@ -456,15 +459,16 @@ class OpenREC():
         Return:
             List of items
         """
-        self.debug(method='Check Collision', uid=uid, active_user=active_user)
+        self.debug(method='Check Collisions', uid=uid, active_user=active_user)
 
         results = []
 
-        if len(self.collision) == 0:
-            print('- There is no collision')
+        if len(self.collisions) == 0:
+            results.append('No overlapping items')
+            print('- There is no collisions')
         else:
             print('Here are the same items that occured in both techniques:')
-            for item in self.collision:
+            for item in self.collisions:
                 results.append(item)
                 print('- {}'.format(item))
 
