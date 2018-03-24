@@ -18,7 +18,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def welcome():
     """
-    Test endpoint.
+    Landing page.
     """
     response = {
         'header': 'Welcome to OpenREC!',
@@ -29,7 +29,7 @@ def welcome():
 @app.route('/user/<int:number>', methods=['GET'])
 def find(number):
     """
-    TODO
+    User's Profile Page.
     """
     threads = []
 
