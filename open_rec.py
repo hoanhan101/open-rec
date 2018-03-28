@@ -346,7 +346,8 @@ class OpenREC():
             if e < 0.001:
                 break
 
-            # print('.', end='', flush=True)
+            if MF_DEBUG == True:
+                print('> Finished step {}/{}'.format(step + 1, steps))
 
         return P, Q
 
