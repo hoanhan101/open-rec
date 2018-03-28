@@ -17,11 +17,14 @@ RATINGS_PATH = 'ml-latest-small/ratings.csv'
 MOVIES_PATH = 'ml-latest-small/movies.csv'
 
 # Matrix factorization constants
-MF_STEPS = 3
+MF_STEPS = 5
 MF_GAMMA = 0.001
 MF_LAMDA = 0.02
 
-# Worker
+# Workers settings
 NUMS_WORKERS = 1
-NUMS_RECOMMENDATIONS = 3
+NUMS_RECOMMENDATIONS = 5
 MAX_ID = 10
+
+# Target only 1 user
+TARGET_ID = 1
