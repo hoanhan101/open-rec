@@ -1,5 +1,5 @@
 # open-rec
-**open-rec** is a recommendation system. The purpose is to gain a better
+**open-rec** is a recommendation system. The goal of this project is to gain a better
 understanding of various **collaborative filtering methods** that are commonly
 used in big system, such as Netflix, Youtube, Amazon,...
 
@@ -42,7 +42,8 @@ users. We then can update the matrix along the way.
 
 ## Testing
 
-> TODO
+Configure in `config.py` and execute `./run.sh` to run the program. The output
+will be stored under the format `Y-M-D_H:M:S.txt`.
 
 ## Flow
 
