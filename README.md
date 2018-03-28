@@ -3,7 +3,15 @@
 understanding of various **collaborative filtering methods** that are commonly
 used in big system, such as Netflix, Youtube, Amazon,...
 
-## Method
+## Dataset
+
+The dataset that I am using is from [MovieLens 100K 
+Datasets](https://grouplens.org/datasets/movielens/)
+
+> Small: 100,000 ratings and 1,300 tag applications applied to 9,000 movies by 
+> 700 users. Last updated 10/2016.
+
+## Methods
 
 ### K Nearest Neighbours
 
@@ -32,14 +40,21 @@ users. We then can update the matrix along the way.
 
 > TODO
 
-## Datasets
-
-[MovieLens 100K Datasets](https://grouplens.org/datasets/movielens/)
-
-> Small: 100,000 ratings and 1,300 tag applications applied to 9,000 movies by 
-> 700 users. Last updated 10/2016.
-
 ## Testing
 
 > TODO
 
+## Flow
+
+- Save the results of training sessions to disk or database (mongodb).
+- Use these to build a Netflix-like interface (need to auto find movies' covers
+  somehow)
+
+## APIs
+
+Endpoint | Description
+--- | ---
+`/user` | List all available users ID
+`/user/<int:ID>` | Show the user's profile with given ID
+`/user/<int:ID>/raw` | Show the user's raw metrics from different methods
+`/dashboard` | Compare different results?
