@@ -42,8 +42,11 @@ users. We then can update the matrix along the way.
 
 ## Testing
 
-Configure in `config.py` and execute `./run.sh` to run the program. The output
-will be stored under the format `Y-M-D_H:M:S.txt`.
+Configure in `config.py` and execute the command `./run.sh`.
+This runs the program for a target user and dumps the output to a file in
+[output](output) folder.
+The file is stored under the format `Y-M-D_H:M:S.txt` where the current time
+(year, month, data, hour, minute, second) is snapshot at runtime.
 
 ## Flow
 
