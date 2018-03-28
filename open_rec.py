@@ -23,7 +23,7 @@ class OpenREC():
 
         Params:
             ratings_path: Dataset's rating path
-            movies_path: Daraset's movie path
+            movies_path: Dataset's movie path
 
         Return:
             None
