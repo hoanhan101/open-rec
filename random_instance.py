@@ -1,5 +1,5 @@
 """
-    monitor.py - Monitoring solution
+    random_instance.py - Test random OpenREC instance
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 3/22/18
 """
@@ -58,9 +58,9 @@ if __name__ == "__main__":
             t.join()
 
         print('')
-        print('worker_TR: {}'.format(worker_TR.data))
-        print('worker_NN: {}'.format(worker_NN.data))
-        print('worker_LT: {}'.format(worker_LT.data))
-        print('worker_CC: {}'.format(worker_CC.data))
+        # print('worker_TR: {}'.format(worker_TR.data))
+        # print('worker_NN: {}'.format(worker_NN.data))
+        # print('worker_LT: {}'.format(worker_LT.data))
+        # print('worker_CC: {}'.format(worker_CC.data))
 
     print('\nExit code 0. Runtime={}'.format(time.time() - start_time))

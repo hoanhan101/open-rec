@@ -12,6 +12,8 @@ import numpy as np
 from open_rec import OpenREC
 from config import *
 
+# Thread Lock
+thread_lock = threading.Lock()
 
 class Worker(threading.Thread):
     def __init__(self, thread_id, task, user_id, limit):
@@ -49,7 +51,7 @@ class Worker(threading.Thread):
         Return:
             None
         """
-        # thread_lock.acquire()
+        thread_lock.acquire()
 
         if self.task == 'nearest_neighbours':
             self.data = self.worker.execute_nearest_neighbour(uid=self.thread_id, 
@@ -69,4 +71,4 @@ class Worker(threading.Thread):
         else:
             print('\nUnavaiable command')
 
-        # thread_lock.release()
+        thread_lock.release()
