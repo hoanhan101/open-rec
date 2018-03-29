@@ -100,11 +100,19 @@ Here are the same items that occured in both techniques:
 - Seven (a.k.a. Se7en) (1995)
 ```
 
-## TODO
+## Done
 - Change top_recommendations to top_favotires
+- Refactor steps in matrix factorization
 - Use threading to execute tasks in parallel to serve resutls quicker
+- Timestamp for each step
+
+## TODO
 - Figure out the reason numpy blocks
   > Maybe it doesn't block. Maybe the locking causes the problem.
 - Calculate matrix factorization once and save the return values to reuse
   during a session, since it's super expensive.
-- Refactor steps in matrix factorization
+- Does the difficulty increase after x number of steps?
+- Does the computer slow down after some number of computations and how to
+  tell?
+- What is the processing of training data? Is it always true that the more
+  training the better?
