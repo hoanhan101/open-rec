@@ -347,7 +347,7 @@ class OpenREC():
                 break
 
             if MF_DEBUG == True:
-                print('> Finished step {}/{}'.format(step + 1, steps))
+                print('{} - Step {}/{}'.format(datetime.datetime.now(), step + 1, steps))
 
         return P, Q
 
@@ -394,7 +394,6 @@ class OpenREC():
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             recommendations = self.find_top_n_recommendations(active_user, limit)
-
 
         for item in recommendations:
             self.nearest_neighbours_store[item] = 1
