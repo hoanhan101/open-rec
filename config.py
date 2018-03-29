@@ -17,7 +17,7 @@ RATINGS_PATH = 'ml-latest-small/ratings.csv'
 MOVIES_PATH = 'ml-latest-small/movies.csv'
 
 # Matrix factorization constants
-MF_DEBUG = False
+MF_DEBUG = True
 MF_STEPS = 5
 MF_GAMMA = 0.001
 MF_LAMDA = 0.02
