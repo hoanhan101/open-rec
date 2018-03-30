@@ -1,5 +1,4 @@
 # Recommender system
-
 *Reference: [Byte-Sized-Chunks: Recommendation
 Systems](https://www.udemy.com/recommendation-systems/)*
 
@@ -205,12 +204,12 @@ neighbours. This requires a huge amount of calculation. Therefore, it is a
 challenge for scalability.
 
 The collaborative filtering we have seen so far is user centric. We could also
-perform item centric collaborative filering. The neighbours could be the
+perform item centric collaborative filtering. The neighbours could be the
 nearest neighbours of a product rather than users.
 
 ### Latent factor based methods
 
-The baisc idea behind laten factor based methods is to take users and their
+The basic idea behind latent factor based methods is to take users and their
 ratings for different products and then identify hidden factors that influence
 a user's rating. The idea for this comes from a concept called Latent semantic
 indexing which is a way to find hidden factors which explains a document or a
@@ -225,5 +224,37 @@ decompose it, into 2 matrices, one where users are mapped onto hidden factors an
 one where items are mapped onto hidden factors.
 
 <img src="img/matrix_factorization.png" width="50%">
+
+Each column in Q is a product described by the hidden factors. Each product is
+presented by what amounts of how much, how strong their possessions of each of
+the factor. This could be a positive or negative number. Similarly, each row in
+the user-factor matrix P is a user described by their interests in the hidden
+factors. This method is called matrix factorization. It was invented and
+populated by the Netflix prize winners. It performed better than the old
+method, which was heavily neighbourhood based.
+
+The objective of matrix factorization is to decompose each user rating into a
+user-factor vector and a product-vector factor. This is analogous to what
+happens in standard linear algebra's Singular Value Decomposition or Principal
+Component Analysis. Both of these are very popular matrix factorization
+technique. However, these techniques would only make sense if we know all the
+rating for all the users for all products, which means there are no missing
+values in the user item rating matrix. Therefore, the question becomes "How do
+we perform matrix factorization when the rating matrix has so many missing
+values?". 
+
+The solution is, we only solve for the ratings which are available
+and completely ignore the missing values. Each rating has to be decomposed into
+2 vectors. We can write an equation for each rating of an item i by user u. We
+can solve this set of equations for the set of ratings which exist (training
+set) then use the result to find the rating of any user for any product. In
+order to solve this set of equations, we need to find the set of factor vectors
+p, for each user u, and q, for each item i, which minimize the error in the
+training set. What if we find too many hidden factors that overfit the training 
+set? We need to penalize models with higher number of factors. To solve this
+optimization problem, there are standard optimization techniques, such as
+Stochastic Gradient Descent and Alternating Least Squares.
+
+<img src="img/matrix_factorization_1.png" width="30%">
 
 ## Association rules
