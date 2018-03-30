@@ -151,7 +151,7 @@ different ways to find the similarity between 2 vectors:
 
 **Euclidean Distance**
 
-<img src="img/euclidean_distance.png" width="30%">
+<img src="img/euclidean_distance.png" width="10%">
 
 It is the distance measured between two points in any space. We can use the
 Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
