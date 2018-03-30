@@ -150,21 +150,21 @@ different ways to find the similarity between 2 vectors:
 
 **Euclidean Distance**
 
-<img src="img/euclidean_distance.png" width="15%">
+<p align="center"><img src="img/euclidean_distance.png" width="15%"></p>
 
 It is the distance measured between two points in any space. We can use the
 Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
 
 **Cosine similarity**
 
-<img src="img/cosine_similarity.png" width="30%">
+<p align="center"><img src="img/cosine_similarity.png" width="30%"></p>
 
 Find the angle between two vectors and that will be the cosine similarity. The
 lower the cosine, the more similar these vectors are.
 
 **Pearson correlation**
 
-<img src="img/pearson_correlation.png" width="30%">
+<p align="center"><img src="img/pearson_correlation.png" width="30%"></p>
 
 Given any two variables, the correlation is the measure of how similar of those
 variables are or how similar the changes in those variables are. The Pearson
@@ -181,7 +181,7 @@ exactly what the Pearson correlation does.
 
 **Goal:** Find the predicted rating of active user a for product i.
 
-<img src="img/predicted_rating.png" width="30%">
+<p align="center"><img src="img/predicted_rating.png" width="30%"></p>
 
 - Start with the average rating of the active user a for any product.
 - For each neighbour (U is the set of nearest neighbours of active user a), add
@@ -223,7 +223,7 @@ users by their ratings for different products. Given that matrix, we factorize/
 decompose it, into 2 matrices, one where users are mapped onto hidden factors and
 one where items are mapped onto hidden factors.
 
-<img src="img/matrix_factorization.png" width="50%">
+<p align="center"><img src="img/matrix_factorization.png" width="50%"></p>
 
 Each column in Q is a product described by the hidden factors. Each product is
 presented by what amounts of how much, how strong their possessions of each of
@@ -255,6 +255,6 @@ set? We need to penalize models with higher number of factors. To solve this
 optimization problem, there are standard optimization techniques, such as
 Stochastic Gradient Descent and Alternating Least Squares.
 
-<img src="img/matrix_factorization_1.png" width="30%">
+<p align="center"><img src="img/matrix_factorization_1.png" width="30%"></p>
 
 ## Association rules
