@@ -66,8 +66,8 @@ or the authors. We then map all the products to the factors. A user's profile
 is created by using the same terms.
 
 This key challenge in content-based filtering is to answer two questions:
-- "What attributes should
-- "How are these generated".
+- "What attributes should ?"
+- "How are these generated ?"
 
 Typically, we will need to manual data collection. For text documents, we could
 use NLP to generate descriptors. It could be as simple as counting word
