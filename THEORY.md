@@ -151,7 +151,7 @@ different ways to find the similarity between 2 vectors:
 
 **Euclidean Distance**
 
-<img src="img/euclidean_distance.png" width="10%">
+<img src="img/euclidean_distance.png" width="15%">
 
 It is the distance measured between two points in any space. We can use the
 Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
@@ -176,7 +176,54 @@ users' ratings for different products. Each certain will have a certain bias.
 Some will rate movies but some might have a tendency to rate everything low.
 
 **How do we account for these biases?**
+
 One way could be to normalize users' ratings by their average ratings. This is
 exactly what the Pearson correlation does.
+
+**Goal:** Find the predicted rating of active user a for product i.
+
+<img src="img/predicted_rating.png" width="30%">
+
+- Start with the average rating of the active user a for any product.
+- For each neighbour (U is the set of nearest neighbours of active user a), add
+  the rating of a user u for product i, but adjust the neighbours' ratings by
+  their average ratings and the similarity between user u and active user a.
+
+**How do we find the top picks for a user?**
+
+We need to predict the ratings for products the user hasn't bought or seen.
+Then pick the top n rated products.
+
+**Discussion**
+
+Nearest neighbour based methods are also called memory based methods. They
+usually involve in-memory calculations on the entire (or a large part) of the
+user rating database. In order to find the nearest neighbours of a particular
+user we have to find the distance between that user and all the other users in
+the user database and sort them by their distances to find the nearest
+neighbours. This requires a huge amount of calculation. Therefore, it is a 
+challenge for scalability.
+
+The collaborative filtering we have seen so far is user centric. We could also
+perform item centric collaborative filering. The neighbours could be the
+nearest neighbours of a product rather than users.
+
+### Latent factor based methods
+
+The baisc idea behind laten factor based methods is to take users and their
+ratings for different products and then identify hidden factors that influence
+a user's rating. The idea for this comes from a concept called Latent semantic
+indexing which is a way to find hidden factors which explains a document or a
+piece of text. This is analogous to content-based filtering except that the
+factors are identified by the learning algorithm. Sometimes the factors might
+turn out to have meaning. Other times, they might be abstract factors with no
+real life meaning.
+
+Taking the same first step as in nearest neighbour based methods, we represent
+users by their ratings for different products. Given that matrix, we factorize/
+decompose it, into 2 matrices, one where users are mapped onto hidden factors and
+one where items are mapped onto hidden factors.
+
+<img src="img/matrix_factorization.png" width="50%">
 
 ## Association rules
