@@ -1,5 +1,8 @@
 # Recommender system
 
+*Reference: [Byte-Sized-Chunks: Recommendation
+Systems](https://www.udemy.com/recommendation-systems/)*
+
 High quality, personalized recommendation system are the holy grail for every
 online stores today, wherever they are selling books, musics, or electronics.
 Amazon, Spotify, Netflix are the best examples since their services are
@@ -66,8 +69,8 @@ or the authors. We then map all the products to the factors. A user's profile
 is created by using the same terms.
 
 This key challenge in content-based filtering is to answer two questions:
-- "What attributes should ?"
-- "How are these generated ?"
+- "What attributes should?"
+- "How are these generated?"
 
 Typically, we will need to manual data collection. For text documents, we could
 use NLP to generate descriptors. It could be as simple as counting word
@@ -121,7 +124,53 @@ to predict how this user react to a bunch of products.
 We start by building a item-rating matrix, where we present users by their
 ratings for different products. This matrix has n rows for all the n users in
 our database and m columns for the entire list of products. It presents every
-user's rating for every product that one has ever rated. Of course there might 
+user's rating for every product that one has ever rated. Of course there are
+some items which haven't been rated by a particular user or some users that
+haven't rated some particular items. This happens in real life because most
+users would not have rated a lot of of items and most items would not have been
+rated by many users. Those particular cell will is presented as NaN.
+
+```
+        Item 1  Item 2  Item 3  Item 4  Item 5  ... Item m
+User 1    4       -       4       -       -           -
+User 2    -       3       4       -       -           -
+User 3    5       3       2       -       5           -
+User 4    2       -       2       -       -           -
+User 5    4       -       4       5       -           -
+     .
+     .
+     .
+User n    4       -       4       5       -           -
+```
+
+Nearest neighbours are found using a similarity or distance metric. There are
+different ways to find the similarity between 2 vectors:
+- Euclidean Distance
+- Cosine similarity
+- Pearson correlation
+
+**Euclidean Distance**
+
+It is the distance measured between two points in any space. We can use the
+Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
+
+**Cosine similarity**
+
+Find the angle between two vectors and that will be the cosine similarity. The
+lower the cosine, the more similar these vectors are.
+
+**Pearson correlation**
+
+Given any two variables, the correlation is the measure of how similar of those
+variables are or how similar the changes in those variables are. The Pearson
+correlation is nothing but a correlation that you would normally measure when
+you try something to do something like a linear regression. It is analogous to
+cosine similarity after adjusting by the respective means. The vectors here are
+users' ratings for different products. Each certain will have a certain bias.
+Some will rate movies but some might have a tendency to rate everything low.
+
+**How do we account for these biases?**
+One way could be to normalize users' ratings by their average ratings. This is
+exactly what the Pearson correlation does.
 
 ## Association rules
-
