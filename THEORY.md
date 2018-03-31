@@ -150,21 +150,21 @@ different ways to find the similarity between 2 vectors:
 
 **Euclidean Distance**
 
-<p align="center"><img src="img/euclidean_distance.png" width="15%"></p>
+<p align="center"><img src="img/euclidean_distance.png" width="25%"></p>
 
 It is the distance measured between two points in any space. We can use the
 Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
 
 **Cosine similarity**
 
-<p align="center"><img src="img/cosine_similarity.png" width="30%"></p>
+<p align="center"><img src="img/cosine_similarity.png" width="40%"></p>
 
 Find the angle between two vectors and that will be the cosine similarity. The
 lower the cosine, the more similar these vectors are.
 
 **Pearson correlation**
 
-<p align="center"><img src="img/pearson_correlation.png" width="30%"></p>
+<p align="center"><img src="img/pearson_correlation.png" width="40%"></p>
 
 Given any two variables, the correlation is the measure of how similar of those
 variables are or how similar the changes in those variables are. The Pearson
@@ -181,7 +181,7 @@ exactly what the Pearson correlation does.
 
 In our case, we need to find the predicted rating of active user a for product i.
 
-<p align="center"><img src="img/predicted_rating.png" width="30%"></p>
+<p align="center"><img src="img/predicted_rating.png" width="40%"></p>
 
 1. Start with the average rating of the active user a for any product.
 2. For each neighbour (U is the set of nearest neighbours of active user a), add
