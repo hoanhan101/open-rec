@@ -150,7 +150,7 @@ different ways to find the similarity between 2 vectors:
 
 **Euclidean Distance**
 
-<p align="center"><img src="img/euclidean_distance.png" width="25%"></p>
+<p align="center"><img src="img/euclidean_distance.png" width="20%"></p>
 
 It is the distance measured between two points in any space. We can use the
 Pythagorean theorem in any n-dimensional space to calculate the hypotenuse.
@@ -164,7 +164,7 @@ lower the cosine, the more similar these vectors are.
 
 **Pearson correlation**
 
-<p align="center"><img src="img/pearson_correlation.png" width="40%"></p>
+<p align="center"><img src="img/pearson_correlation.png" width="35%"></p>
 
 Given any two variables, the correlation is the measure of how similar of those
 variables are or how similar the changes in those variables are. The Pearson
