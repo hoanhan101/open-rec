@@ -223,7 +223,7 @@ users by their ratings for different products. Given that matrix, we factorize/
 decompose it, into 2 matrices, one where users are mapped onto hidden factors and
 one where items are mapped onto hidden factors.
 
-<p align="center"><img src="img/matrix_factorization.png" width="50%"></p>
+<p align="center"><img src="img/matrix_factorization.png" width="60%"></p>
 
 Each column in Q is a product described by the hidden factors. Each product is
 presented by what amounts of how much, how strong their possessions of each of
@@ -255,7 +255,7 @@ set? We need to penalize models with higher number of factors. To solve this
 optimization problem, there are standard optimization techniques, such as
 Stochastic Gradient Descent and Alternating Least Squares.
 
-<p align="center"><img src="img/matrix_factorization_1.png" width="30%"></p>
+<p align="center"><img src="img/matrix_factorization_1.png" width="40%"></p>
 
 **Stochastic Gradient Descent**
 
