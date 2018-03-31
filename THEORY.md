@@ -179,14 +179,14 @@ Some will rate movies but some might have a tendency to rate everything low.
 One way could be to normalize users' ratings by their average ratings. This is
 exactly what the Pearson correlation does.
 
-**Goal:** Find the predicted rating of active user a for product i.
+In our case, we need to find the predicted rating of active user a for product i.
 
 <p align="center"><img src="img/predicted_rating.png" width="30%"></p>
 
-- Start with the average rating of the active user a for any product.
-- For each neighbour (U is the set of nearest neighbours of active user a), add
-  the rating of a user u for product i, but adjust the neighbours' ratings by
-  their average ratings and the similarity between user u and active user a.
+1. Start with the average rating of the active user a for any product.
+2. For each neighbour (U is the set of nearest neighbours of active user a), add
+   the rating of a user u for product i, but adjust the neighbours' ratings by
+   their average ratings and the similarity between user u and active user a.
 
 **How do we find the top picks for a user?**
 
@@ -256,5 +256,91 @@ optimization problem, there are standard optimization techniques, such as
 Stochastic Gradient Descent and Alternating Least Squares.
 
 <p align="center"><img src="img/matrix_factorization_1.png" width="30%"></p>
+
+**Stochastic Gradient Descent**
+
+1. Initialize some values of p and q.
+2. Find the current values of the error functions.
+3. Find the slope at the current point and move slightly downwards in the
+   position.
+4. Repeat until we reach a mimimum.
+
+<p align="center"><img src="img/sgd.png" width="40%"></p>
+
+However, Stochastic Gradient Descent doesn't guarantee the global minimum
+because it depends on where your initial values are. If our initial values of p
+and q are in such a place that if we move downward from there, we will reach
+the local minimum, then we will never reach the global minimum.
+
+**Alternating Least Squares**
+
+1. Fix the value of one variable, for example p, and solve for the other 
+   variable, q.
+2. Repeat until the value of p and q converge.
+
+**Discussion**
+
+Matrix factorization is one of the techniques that provides a big jump in the
+improvement of the errors. However, there are also other techniques that are
+nice to look at as well, such as normalizing for user biases and
+temporal effects. Both of these have big impacts in improving matrix
+factorization even further. The idea of user biases is to account for biases
+that some users might have. Some users tend to rate products
+higher in general and some rate them low. It might be the case that some
+products induce biases. For example, most people will rate
+the movie Inceptions high because they just of that particular director and
+that kind of movies. Temporal effects account for the fact that users'
+interests can be changed along with time.
+
+**Common challenges**
+
+> Cold start: How to deal with new products or users with no history?
+
+Collaborative filtering relies on user history. It doesn't use any products'
+descriptors or users' demographic. What should we do when we have products
+which no users has rated yet or users that has no ratings yet. The answer is to
+use content-boosted collaborative filtering. This is the combination of
+content-based filtering and collaborative filtering. We could use products
+attributes, like genre, product's content or users' demographic to find similar
+users and then augment collaborative filtering.
+
+> Data sparsity: What to do when our ratings data is very sparse?
+
+Online stores normally have a huge number of products and a huge number of
+users. There are very few products that are rated by multiple users and very
+few users have rated the products. When we try to build the user item rating
+matrix and find the similarity between users or matrix factorization, we end up
+with a matrix which is very sparse. This is a problem because we have a huge
+matrix but not many users contribute to the learning process but they make the
+computation inefficient and expensive. Dimensionality reduction comes to our
+rescue here. We can remove unimportant dimensions, unimportant users or
+products where we are not learning much and reduce the sparsity of the user
+item rating matrix.
+
+> Gray sheep: Are there some kind of users that collaborative filtering won't
+> work for?
+
+Collaborating filtering relies on this idea that: if two users have the same
+opinions some things, they have similar opinions about other things as well. A
+grey sheep is someone whose opinion is not consistent. This can be very common.
+For this kind of users, content-based filtering become important.
+
+> Synonymy: How to deal with products which are basically the same but with
+> different names?
+
+There are some products that are practically the same, such as different
+editions of a books or ebooks vs physical copies. Normally, stores would have
+different product codes for each of those. Since collaborative filtering
+doesn't use any products' descriptors, it might miss out this information.
+Latent factor based collaborative filtering techniques have been seen to
+identify synonyms very well. If we have a set of data that might have synonymy
+problem, it's better to go with latent factor based collaborative filtering
+rather than neighbourhood based one.
+
+> Shilling attacks: How to deal with users that are trying to game the system?
+
+There might be some authors that give tons of positive fake ratings for their
+own content and negative ones for other content. Taking precautions against
+these can make the recommendation system more robust.
 
 ## Association rules
