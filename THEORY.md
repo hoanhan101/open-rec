@@ -344,3 +344,34 @@ own content and negative ones for other content. Taking precautions against
 these can make the recommendation system more robust.
 
 ## Association rules
+
+Association rules help us find products which are related to a product but
+these are not the same kind of products. These are the products that are likely
+to be bought with, or used along with the product we are looking at. It is
+normally called Market Basket Analysis. Basically, the question is "Which items
+are purchased together in the same transaction?", "What kind of products are
+added in the same cart?" or "What are the products that are bought by the same
+user within a short amount of time?". 
+
+The Apriori algorithm is the most well known technique for mining association
+rules. A basket could be items bought in a single transaction or items bought
+by a user over a short period of time. We feed different baskets into the
+algorithm and we will get some association rules. These rules tell us what kind
+of products are purchased in the same basket. Each rule has to satisfy certain
+conditions. Each rule must have a minimum Support and a minimum Confidence.
+Support and Confidence are matrices that are defined in a way that tell us how
+strong these association are. Support tells us how many of all transactions
+contain those items in the group. Confidence tells us how many of all transactions
+contain those items exhibit the association. Support specifies the minimum
+number of samples required for the rule to be statistically significant. If the
+item has been sold to few times, there isn't enough data to support the rule.
+Support takes the proportion of baskets which contain the items on one side of
+the rule while Confidence takes the proportion of basket which contain the
+items on both sides of the rule as compared to left side alone.
+
+The goal is to find all the rules that satisfy the Support and Confidence
+constraints. Apriori does this in an efficient way without generating all
+possible rules. It starts by generating two items rules, then 3 items rules and
+so on. At each step, it drops the items that don't have enough Support and
+Confidence. By doing that, it will reduce the items we need to loop through to 
+find rules.
