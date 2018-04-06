@@ -1,0 +1,134 @@
+
+
+    █▀▀█ █▀▀█ █▀▀ █▀▀▄ ░ ░ █▀▀▄ █▀▀ █▀▀
+    █░░█ █░░█ █▀▀ █░░█ ▀ ▀ █░░█ █▀▀ █░░
+    ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ░ ░ ▀▀▀░ ▀▀▀ ▀▀▀
+
+
+CONFIGS={'MF_STEPS': 100, 'MF_GRAMMA': 0.001, 'MF_LAMDA': 0.02, 'NUMS_RECOMMENDATIONS': 5, 'TARGET_ID': 1}
+
+2018-03-28 20:20:28.041590 - Worker: 0, UserID: 1, Method: Top Favorites
+- Cinema Paradiso (Nuovo cinema Paradiso) (1989)
+- Tron (1982)
+- French Connection, The (1971)
+- Dracula (Bram Stoker's Dracula) (1992)
+- Blazing Saddles (1974)
+
+2018-03-28 20:20:28.045324 - Worker: 1, UserID: 1, Method: Nearest Neighbours
+- Usual Suspects, The (1995)
+- Pulp Fiction (1994)
+- Fargo (1996)
+- Godfather, The (1972)
+- One Flew Over the Cuckoo's Nest (1975)
+
+2018-03-28 20:20:38.980219 - Worker: 2, UserID: 1, Method: Latent Factors
+> Finished step 1/100
+> Finished step 2/100
+> Finished step 3/100
+> Finished step 4/100
+> Finished step 5/100
+> Finished step 6/100
+> Finished step 7/100
+> Finished step 8/100
+> Finished step 9/100
+> Finished step 10/100
+> Finished step 11/100
+> Finished step 12/100
+> Finished step 13/100
+> Finished step 14/100
+> Finished step 15/100
+> Finished step 16/100
+> Finished step 17/100
+> Finished step 18/100
+> Finished step 19/100
+> Finished step 20/100
+> Finished step 21/100
+> Finished step 22/100
+> Finished step 23/100
+> Finished step 24/100
+> Finished step 25/100
+> Finished step 26/100
+> Finished step 27/100
+> Finished step 28/100
+> Finished step 29/100
+> Finished step 30/100
+> Finished step 31/100
+> Finished step 32/100
+> Finished step 33/100
+> Finished step 34/100
+> Finished step 35/100
+> Finished step 36/100
+> Finished step 37/100
+> Finished step 38/100
+> Finished step 39/100
+> Finished step 40/100
+> Finished step 41/100
+> Finished step 42/100
+> Finished step 43/100
+> Finished step 44/100
+> Finished step 45/100
+> Finished step 46/100
+> Finished step 47/100
+> Finished step 48/100
+> Finished step 49/100
+> Finished step 50/100
+> Finished step 51/100
+> Finished step 52/100
+> Finished step 53/100
+> Finished step 54/100
+> Finished step 55/100
+> Finished step 56/100
+> Finished step 57/100
+> Finished step 58/100
+> Finished step 59/100
+> Finished step 60/100
+> Finished step 61/100
+> Finished step 62/100
+> Finished step 63/100
+> Finished step 64/100
+> Finished step 65/100
+> Finished step 66/100
+> Finished step 67/100
+> Finished step 68/100
+> Finished step 69/100
+> Finished step 70/100
+> Finished step 71/100
+> Finished step 72/100
+> Finished step 73/100
+> Finished step 74/100
+> Finished step 75/100
+> Finished step 76/100
+> Finished step 77/100
+> Finished step 78/100
+> Finished step 79/100
+> Finished step 80/100
+> Finished step 81/100
+> Finished step 82/100
+> Finished step 83/100
+> Finished step 84/100
+> Finished step 85/100
+> Finished step 86/100
+> Finished step 87/100
+> Finished step 88/100
+> Finished step 89/100
+> Finished step 90/100
+> Finished step 91/100
+> Finished step 92/100
+> Finished step 93/100
+> Finished step 94/100
+> Finished step 95/100
+> Finished step 96/100
+> Finished step 97/100
+> Finished step 98/100
+> Finished step 99/100
+> Finished step 100/100
+- Toy Story (1995)
+- Casino (1995)
+- Twelve Monkeys (a.k.a. 12 Monkeys) (1995)
+- Seven (a.k.a. Se7en) (1995)
+- Usual Suspects, The (1995)
+
+2018-03-28 20:23:23.649732 - Worker: 3, UserID: 1, Method: Check Collisions
+- There is no collisions
+
+Exit code 0. Runtime=176.42247986793518
