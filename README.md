@@ -1,7 +1,8 @@
 # open-rec
 
 **open-rec** is a primitive recommendation system. The goal of this project is 
-to gain a better understanding of recommendation systems work in practice.
+to gain a better understanding of recommendation systems and how they work in 
+practice.
 
 ## Project Status
 
