@@ -3,6 +3,21 @@
 **open-rec** is a primitive recommendation system. The goal of this project is 
 to gain a better understanding of recommendation systems work in practice.
 
+## Project Status
+
+It is still a work-in-progress.
+
+## Table of Contents
+
+- [Theory](#theory)
+- [Dataset](#dataset)
+- [Structure](#structure)
+- [Testing](#testing)
+- [Flow](#flow)
+- [APIs](#apis)
+
+## Theory
+
 Here is a write-up for the [theory](THEORY.md).
 
 ## Dataset
