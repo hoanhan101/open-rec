@@ -1,12 +1,16 @@
 # open-rec
 
+![build-success](https://img.shields.io/badge/build-success-brightgreen.svg)
+![test-passing](https://img.shields.io/badge/test-passing-brightgreen.svg)
+![status-wip](https://img.shields.io/badge/status-work_in_progress-green.svg)
+
 **open-rec** is a primitive recommendation system. The goal of this project is 
 to gain a better understanding of recommendation systems and how they work in 
 practice.
 
 ## Project Status
 
-It is still a work-in-progress.
+It is still a work in progress.
 
 ## Table of Contents
 
