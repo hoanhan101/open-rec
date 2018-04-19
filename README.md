@@ -12,6 +12,13 @@ practice.
 
 It is still a work in progress.
 
+**Tasks**
+
+- [ ] Redefine workflow (training sessions, data processing, presenting, user usability)
+- [ ] Write output to files
+- [ ] Read from files (instead of waiting for worker to run) and serve them through web pages
+- [ ] Given a movie name in text form, find a corresponding images (doesn't have to be movie posters)
+
 ## Table of Contents
 
 - [Theory](#theory)
@@ -47,9 +54,9 @@ The file is stored under the format `Y-M-D_H:M:S.txt` where the current time
 
 ## Flow
 
-- Save the results of training sessions to disk or database (mongodb).
+- Save the results of training sessions to disk.
 - Use these to build a Netflix-like interface (need to auto find movies' covers
-  somehow)
+  somehow).
 
 ## APIs
 
