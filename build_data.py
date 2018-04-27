@@ -5,11 +5,10 @@
 """
 
 from persister import Persister
+from config import *
 
 
 if __name__ == "__main__":
-    MAX_ID = 10
-
     for i in range(1, MAX_ID):
         persister = Persister(i)
         persister.write()
