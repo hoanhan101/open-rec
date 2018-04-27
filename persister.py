@@ -55,7 +55,7 @@ class Persister():
             None
 
         Return:
-            None
+            data <dict>: Content of JSON file
         """
         threads = []
 
@@ -106,5 +106,13 @@ class Persister():
             'timestamp': self.timestamp
         }
 
-        with open(self.filepath, 'w+') as output_file:
-            json.dump(data, output_file)
+        try:
+            with open(self.filepath, 'w+') as output_file:
+                json.dump(data, output_file)
+                return data
+        except FileNotFoundError:
+            data = {
+                "user_id": self.user_id,
+                "data": None
+            }
+            return data
