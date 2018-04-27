@@ -12,12 +12,19 @@ practice.
 
 It is still a work in progress.
 
-**Tasks**
+**Completed**
 
-- [ ] Redefine workflow (training sessions, data processing, presenting, user usability)
-- [ ] Write output to files
-- [ ] Read from files (instead of waiting for worker to run) and serve them through web pages
+- [x] Redefine workflow (training sessions, data processing, presenting, user usability)
+- [x] Write output to files
+- [x] Read from files (instead of waiting for worker to run) and serve them through web pages
+
+**Ideas**
+
 - [ ] Given a movie name in text form, find a corresponding images (doesn't have to be movie posters)
+
+**Issues**
+
+- [ ] Latent factor method is not working for user 101 -> cause deadlock
 
 ## Table of Contents
 
