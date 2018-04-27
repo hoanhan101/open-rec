@@ -9,7 +9,7 @@ from config import *
 
 
 if __name__ == "__main__":
-    for i in range(1, MAX_ID):
+    for i in range(MIN_ID, MAX_ID):
         persister = Persister(i)
         persister.write()
         print(persister.read())

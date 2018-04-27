@@ -27,7 +27,8 @@ NUMS_RECOMMENDATIONS = 10
 
 # For target_random and build data only
 NUMS_WORKERS = 1
-MAX_ID = 10
+MIN_ID = 1
+MAX_ID = 100
 
 # For target_one only 
 TARGET_ID = 1
