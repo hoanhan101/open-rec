@@ -18,17 +18,17 @@ MOVIES_PATH = 'ml-latest-small/movies.csv'
 
 # Matrix factorization constants
 MF_DEBUG = True
-MF_STEPS = 15
+MF_STEPS = 20
 MF_GAMMA = 0.001
 MF_LAMDA = 0.02
 
 # Number of recommendation output 
-NUMS_RECOMMENDATIONS = 15
+NUMS_RECOMMENDATIONS = 20
 
 # For target_random and build data only
 NUMS_WORKERS = 1
 MIN_ID = 1
-MAX_ID = 100
+MAX_ID = 101
 
 # For target_one only 
 TARGET_ID = 1
