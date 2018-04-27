@@ -26,7 +26,7 @@ class Persister():
         """
         self.user_id = user_id
         self.timestamp = strftime("%Y-%m-%d %H:%M:%S", gmtime()) 
-        self.filepath = '/'.join(("output", str(user_id) + ".json"))
+        self.filepath = '/'.join(("output", "json", str(user_id) + ".json"))
     def read(self):
         """
         Read user's data from file.
@@ -106,5 +106,5 @@ class Persister():
             'timestamp': self.timestamp
         }
 
-        with open(self.filepath, 'w') as output_file:
+        with open(self.filepath, 'w+') as output_file:
             json.dump(data, output_file)
