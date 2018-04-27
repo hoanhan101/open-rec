@@ -22,10 +22,12 @@ MF_STEPS = 5
 MF_GAMMA = 0.001
 MF_LAMDA = 0.02
 
-# Workers settings
-NUMS_WORKERS = 1
+# Number of recommendation output 
 NUMS_RECOMMENDATIONS = 5
+
+# For target_random only
+NUMS_WORKERS = 1
 MAX_ID = 10
 
-# Target only 1 user
+# For target_one only 
 TARGET_ID = 1

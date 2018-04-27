@@ -1,5 +1,5 @@
 """
-    server.py - OpenREC API
+    server.py - OpenREC Server
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/22/18
 """
