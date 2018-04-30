@@ -12,6 +12,9 @@ LOGO = """
 
 """
 
+# TMDB API Key
+TMDB_API_KEY = '5aa9602e93b97cbbc78fb33204297c2a'
+
 # Dataset location
 RATINGS_PATH = 'ml-latest-small/ratings.csv'
 MOVIES_PATH = 'ml-latest-small/movies.csv'
