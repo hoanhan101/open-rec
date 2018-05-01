@@ -8,8 +8,7 @@ import threading
 
 from flask import Flask, jsonify, render_template
 
-from worker import Worker
-from open_rec import OpenREC
+from presenter import Presenter
 from config import *
 
 app = Flask(__name__)
@@ -31,39 +30,13 @@ def find(number):
     """
     User's Profile Page.
     """
-    threads = []
-
-    worker_TF = Worker(thread_id=0,
-                       task='top_favorites',
-                       user_id=number,
-                       limit=NUMS_RECOMMENDATIONS)
-
-    worker_NN = Worker(thread_id=1,
-                       task='nearest_neighbours',
-                       user_id=number,
-                       limit=NUMS_RECOMMENDATIONS)
-
-    worker_LT = Worker(thread_id=2, 
-                       task='latent_factors',
-                       user_id=number, 
-                       limit=NUMS_RECOMMENDATIONS)
-
-    worker_TF.start()
-    worker_NN.start()
-    worker_LT.start()
-
-    threads.append(worker_TF)
-    threads.append(worker_NN)
-    threads.append(worker_LT)
-
-    for t in threads:
-        t.join()
+    presenter = Presenter(number)
 
     response = {
         'header': 'User {}\'s profile'.format(number),
-        'top_favorites': worker_TF.data,
-        'nearest_neighbours': worker_NN.data,
-        'latent_factors': worker_LT.data
+        'top_favorites': presenter.get_TF_data(),
+        'nearest_neighbours': presenter.get_NN_data(),
+        'latent_factors': presenter.get_LF_data() 
     }
 
     return render_template('user.html', data=response)
