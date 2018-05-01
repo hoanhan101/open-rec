@@ -27,6 +27,8 @@ class Persister():
         self.user_id = user_id
         self.timestamp = strftime("%Y-%m-%d %H:%M:%S", gmtime()) 
         self.filepath = '/'.join(("output", "json", str(user_id) + ".json"))
+        self.data = {}
+
     def read(self):
         """
         Read user's data from file.
@@ -40,13 +42,16 @@ class Persister():
         try:
             with open(self.filepath, 'r') as raw_file:
                 data = json.load(raw_file)
+                self.data = data
                 return data
         except FileNotFoundError:
             data = {
                 "user_id": self.user_id,
                 "data": None
             }
+            self.data = data
             return data
+
     def write(self):
         """
         Write user's data to file.
