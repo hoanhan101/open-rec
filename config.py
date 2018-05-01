@@ -12,8 +12,9 @@ LOGO = """
 
 """
 
-# TMDB API Key
+# TMDB API
 TMDB_API_KEY = '5aa9602e93b97cbbc78fb33204297c2a'
+MOVIE_SEARCH_ENDPOINT = 'https://api.themoviedb.org/3/search/movie?api_key={}&query='.format(TMDB_API_KEY)
 
 # Dataset location
 RATINGS_PATH = 'ml-latest-small/ratings.csv'
