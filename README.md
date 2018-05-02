@@ -8,6 +8,8 @@
 to gain a better understanding of recommendation systems and how they work in 
 practice.
 
+![Demo](img/demo.png)
+
 ## Project Status
 
 It is still a work in progress.
