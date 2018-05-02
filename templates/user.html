@@ -1,11 +1,14 @@
-
 <!doctype html>
 <html lang="en">
 <head>
     <!--CSS starts-->
     <style>
         .card-block {
-          margin: 15px;
+            margin: 15px;
+        }
+
+        body {
+            background-color: rgb(20, 20, 20) !important;
         }
     </style>
 
@@ -40,9 +43,9 @@
 <body>
     <div class="container">
         {% if data %}
-            <div style="background-color: white; color: #4b4b4b;" class="jumbotron jumbotron-fluid">
+            <div style="background-color: rgb(20, 20, 20); color: white;" class="jumbotron jumbotron-fluid">
                 <div style="padding: 0px;" class="container">
-                    <h1 class="display-4">{{data['header']}}</h1>
+                    <h1 style="color: rgb(227, 18, 34);" class="display-4">{{data['header']}}</h1>
                 </div>
                 <div style="padding: 0px;" class="container">
                     <br>
@@ -50,27 +53,27 @@
                     <h4>Top Favorites</h4>
                     <ul>
                     {% for i in data['top_favorites'] %}
-                        <li>{{i}}</li>
+                        <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
                     {% endfor %}
                     </ul>
 
                     <h4>Nearest Neighbours</h4>
                     <ul>
                     {% for i in data['nearest_neighbours'] %}
-                        <li>{{i}}</li>
+                        <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
                     {% endfor %}
                     </ul>
 
                     <h4>Latent Factors</h4>
                     <ul>
                     {% for i in data['latent_factors'] %}
-                        <li>{{i}}</li>
+                        <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
                     {% endfor %}
                     </ul>
                 </div>
             </div>
         {% else %}
-            <div style="background-color: white; color: #4b4b4b;" class="jumbotron jumbotron-fluid">
+            <div style="background-color: rgb(20, 20, 20); color: white;" class="jumbotron jumbotron-fluid">
                 <div style="padding: 0px;" class="container">
                     <h1 class="display-4">No data</h1>
                 </div>
