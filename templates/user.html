@@ -9,6 +9,7 @@
 
         body {
             background-color: rgb(20, 20, 20) !important;
+            font-family: 'Open Sans', sans-serif !important;
         }
     </style>
 
@@ -22,6 +23,10 @@
     <!-- <meta http-equiv="refresh" content="7"> -->
 
     <title>OpenREC</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i"
+    rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
@@ -45,26 +50,27 @@
         {% if data %}
             <div style="background-color: rgb(20, 20, 20); color: white;" class="jumbotron jumbotron-fluid">
                 <div style="padding: 0px;" class="container">
-                    <h1 style="color: rgb(227, 18, 34);" class="display-4">{{data['header']}}</h1>
+                    <h2 style="color: rgb(227, 18, 34);"
+                        class="display-4"><strong>{{data['header']}}</strong></h2>
                 </div>
                 <div style="padding: 0px;" class="container">
                     <br>
 
-                    <h4>Top Favorites</h4>
+                    <h5>Top Favorites</h5>
                     <ul>
                     {% for i in data['top_favorites'] %}
                         <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
                     {% endfor %}
                     </ul>
 
-                    <h4>Nearest Neighbours</h4>
+                    <h5>Nearest Neighbours</h5>
                     <ul>
                     {% for i in data['nearest_neighbours'] %}
                         <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
                     {% endfor %}
                     </ul>
 
-                    <h4>Latent Factors</h4>
+                    <h5>Latent Factors</h5>
                     <ul>
                     {% for i in data['latent_factors'] %}
                         <img src="{{i['link']}}" alt="{{i['title']}}" width="116" height="171">
