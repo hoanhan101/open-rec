@@ -7,6 +7,7 @@
 
 import warnings
 import datetime
+import pickle
 
 import itertools
 import numpy as np
@@ -421,9 +422,17 @@ class OpenREC():
 
         results = []
 
-        (P, Q) = self.perform_matrix_factorization(
-            self.user_item_rating_matrix.iloc[:100, :100], 2
-        )
+        try:
+            P = pd.read_pickle('P.pkl')
+            Q = pd.read_pickle('Q.pkl')
+        except FileNotFoundError as e:
+            print(e)
+            (P, Q) = self.perform_matrix_factorization(
+                self.user_item_rating_matrix.iloc[:100, :100], 2
+            )
+
+            P.to_pickle('P.pkl')
+            Q.to_pickle('Q.pkl')
 
         predicted_ratings = pd.DataFrame(
             np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
