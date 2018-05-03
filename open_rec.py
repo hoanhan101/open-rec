@@ -423,16 +423,17 @@ class OpenREC():
         results = []
 
         try:
-            P = pd.read_pickle('P.pkl')
-            Q = pd.read_pickle('Q.pkl')
+            P = pd.read_pickle('output/pkl/P.pkl')
+            Q = pd.read_pickle('output/pkl/Q.pkl')
         except FileNotFoundError as e:
             print(e)
+
             (P, Q) = self.perform_matrix_factorization(
-                self.user_item_rating_matrix.iloc[:100, :100], 2
+                self.user_item_rating_matrix, 2
             )
 
-            P.to_pickle('P.pkl')
-            Q.to_pickle('Q.pkl')
+            P.to_pickle('output/pkl/P.pkl')
+            Q.to_pickle('output/pkl/Q.pkl')
 
         predicted_ratings = pd.DataFrame(
             np.dot(P.loc[active_user], Q.T), index=Q.index, columns=['Rating']
