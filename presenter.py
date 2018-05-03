@@ -1,5 +1,5 @@
 """
-    process_data.py - Process data
+    presenter.py - Presenter parses data and gets TMDb poster links
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 04/30/18
 """
@@ -16,6 +16,13 @@ from config import *
 class Presenter():
     def __init__(self, user_id):
         """
+        Initialize a Presenter object to read and process data.
+
+        Params:
+            None
+
+        Return:
+            None
         """
         self.user_id = user_id
         self.persister = Persister(self.user_id)
@@ -30,6 +37,13 @@ class Presenter():
 
     def process(self, data):
         """
+        Parse string to URL scheme.
+
+        Params:
+            data <str>: Data to process
+
+        Return:
+            List of workable string endpoints.
         """
         endpoints = []
         for item in data:
@@ -45,39 +59,72 @@ class Presenter():
 
     def get_config(self):
         """
+        Get configurations.
+
+        Params:
+            None
+
+        Return:
+            Configuration data in dictionary format.
         """
         return self.config
 
-    def get_TF_data(self):
+    def get_data(self, method):
         """
-        """
-        return self.TF_data
-    
-    def get_NN_data(self):
-        """
-        """
-        return self.NN_data
+        Get trained data for a specific method.
 
-    def get_LF_data(self):
-        """
-        """
-        return self.LF_data
+        Params:
+            method <str>: Method to get
 
-    def get_TF_endpoints(self):
+        Return:
+            Data in dictionary format.
         """
+        if method == 'TF':
+            data = self.TF_data
+        elif method == 'NN':
+            data = self.NN_data
+        elif method == 'LF':
+            data = self.LF_data
+
+        return data
+
+    def get_endpoints(self, method):
+        """
+        Get processed endpoints for a specific method.
+
+        Params:
+            method <str>: Method to get
+
+        Return:
+            List of workable string endpoints.
         """
         endpoints = []
-        for item in self.process(self.TF_data):
+
+        if method == 'TF':
+            data = self.TF_data
+        elif method == 'NN':
+            data = self.NN_data
+        elif method == 'LF':
+            data = self.LF_data
+
+        for item in self.process(data):
             endpoints.append(item)
 
         return endpoints
-    
-    def get_TF_posters(self):
-        """
-        """
-        posters = []
 
-        for endpoint in self.get_TF_endpoints():
+    def get_posters(self, method, n):
+        """
+        Get posters with titles and links for a specific method.
+
+        Params:
+            method <str>: Method to get
+            n <int>: Number of returned posters
+
+        Return:
+            List of poster objects with titles and links.
+        """
+        poster_paths = []
+        for endpoint in self.get_endpoints(method):
             poster_path_r = requests.get(endpoint)
             first_result = json.loads(poster_path_r.text).get('results')
             try:
@@ -93,13 +140,14 @@ class Presenter():
             else:
                 poster = ""
 
-            posters.append(poster)
+            poster_paths.append(poster)
+        
+        titles = self.get_data(method)
+        posters = []
+        for i in range(len(titles)):
+            posters.append({
+                'title': titles[i],
+                'link': poster_paths[i]
+            })
 
-        return posters
-
-
-if __name__ == "__main__":
-    presenter = Presenter(1)
-    # print(presenter.get_config())
-    # print(presenter.get_TF_data())
-    pprint(presenter.get_TF_posters())
+        return posters[:n]

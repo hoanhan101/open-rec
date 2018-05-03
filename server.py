@@ -25,18 +25,18 @@ def welcome():
     return render_template('landing.html', data=response)
 
 
-@app.route('/user/<int:number>', methods=['GET'])
-def find(number):
+@app.route('/user/<int:user_id>', methods=['GET'])
+def find(user_id):
     """
     User's Profile Page.
     """
-    presenter = Presenter(number)
+    presenter = Presenter(user_id)
 
     response = {
-        'header': 'User {}\'s profile'.format(number),
-        'top_favorites': presenter.get_TF_data(),
-        'nearest_neighbours': presenter.get_NN_data(),
-        'latent_factors': presenter.get_LF_data() 
+        'header': 'OpenREC'.format(user_id),
+        'top_favorites': presenter.get_posters('TF', 8),
+        'nearest_neighbours': presenter.get_posters('NN', 8),
+        'latent_factors': presenter.get_posters('LF', 8) 
     }
 
     return render_template('user.html', data=response)
