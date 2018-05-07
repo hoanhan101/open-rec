@@ -36,6 +36,7 @@ It is still a work in progress.
 - [Structure](#structure)
 - [Flow](#flow)
 - [APIs](#apis)
+- [Usage](#usage)
 
 ## Theory
 
@@ -65,13 +66,23 @@ The dataset that I am using is [MovieLens 100K Datasets](https://grouplens.org/d
 
 ## Flow
 
-- Configure data location and number of steps: `config.py`
-- Train data: `open_rec.py` + `worker.py`
-- Save results to disk: `persister.py`
-- Read from disk and display: `presenter.py` + `server.py`
+- Configure data location and number of steps: `config.py`.
+- Train data: `open_rec.py` + `worker.py`.
+- Save results to disk: `persister.py`.
+- Read from disk and display: `presenter.py` + `server.py`.
 
 ## APIs
 
 Endpoint | Description
 --- | ---
-`/user/<int:ID>` | Show the user's profile with given ID
+`/` | Welcome page 
+`/user/<int:ID>/data` | Return user's data in JSON
+`/user/<int:ID>/poster` | Return user's data with TMDb posters links in JSON
+`/user/<int:ID>/view` | Present the result in web page 
+
+## Usage
+
+- Configure in `config.py`.
+- Train data with `python3 build_data.py`.
+- Setup a server to see the results in web interface by `python3 server.py`. Default port is 5000,
+  endpoints are presented above.
