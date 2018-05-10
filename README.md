@@ -66,6 +66,8 @@ The dataset that I am using is [MovieLens 100K Datasets](https://grouplens.org/d
 
 ## Flow
 
+![Flow](img/flow.png)
+
 - Configure data location and number of steps: `config.py`.
 - Train data: `open_rec.py` + `worker.py`.
 - Save results to disk: `persister.py`.
