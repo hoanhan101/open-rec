@@ -7,6 +7,7 @@
 import threading
 
 from flask import Flask, jsonify, render_template
+from time import ctime, time
 
 from presenter import Presenter
 from config import *
@@ -23,6 +24,17 @@ def welcome():
         'header': 'Welcome to OpenREC!',
     }
     return render_template('landing.html', data=response)
+
+@app.route('/test', methods=['GET'])
+def test():
+    """
+    Test endpoint
+    """
+    response = {
+        'status': 'ok',
+        'timestamp': ctime(time())
+    }
+    return jsonify(response)
 
 @app.route('/config', methods=['GET'])
 def config():
