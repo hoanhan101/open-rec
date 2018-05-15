@@ -40,7 +40,7 @@ class Presenter():
         Parse string to URL scheme.
 
         Params:
-            data <str>: Data to process
+            data <list>: List of data to process
 
         Return:
             List of workable string endpoints.
@@ -134,6 +134,7 @@ class Presenter():
                 first_result = ""
 
             if first_result != "":
+                # pprint(first_result)
                 original_title = first_result.get('original_title')
                 poster_path = first_result.get('poster_path')
                 poster = 'https://image.tmdb.org/t/p/w500{}'.format(poster_path)
