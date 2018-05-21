@@ -54,17 +54,6 @@ class OpenREC():
         self.collisions = []
         self.nearest_neighbours_store = {}
 
-        # K NEAREST NEIGHBOURS
-        # -----------------------
-        # Start by using a neighbour based collaborative filtering model.
-        # Need to find the k nearest neighbours of a user and use their ratings to
-        # predict ratings of the active user for movies they haven't rated yet.
-
-        # Need to present each user as a vector.
-        # Each element of the vector will be their rating for 1 movie.
-        # When user doesn't have any rating for a movie, the corresponding component
-        # will be NaN, aka Not a Number.
-
         # pivot_table in pandas is similar to Pivot table in Excel or GroupBy in SQL.
         # Let userID be index row and movieID be column, value is the result of
         # aggregated function to calculate the mean rating rating for that movie.
@@ -118,11 +107,9 @@ class OpenREC():
             The correlation of these 2 vectors.
         """
         # Normalize for any biases that users might have.
-        # For example:
-        #   - some users might be bias by high ratings, they are just generous.
-        #   - some are more ciritical so they give lower rating in general
-        # Make sure that any bias which is specific to that user
-        # is removed.
+        # For example, some users might be bias by high ratings, they are just generous.
+        # Some are more ciritical so they give lower rating in general.
+        # Make sure that any bias which is specific to that user is removed.
         # np.nanmean() returns the mean of an array after ignoring 
         user_1 = np.array(user_1) - np.nanmean(user_1)
         user_2 = np.array(user_2) - np.nanmean(user_2)
@@ -247,23 +234,6 @@ class OpenREC():
 
         return list(top_recommendations_titles.title)
 
-    # MATRIX FACTORIZATION
-    # -----------------------
-    # Identify some hidden factors which influence user's ratings of a movie.
-    # We don't know these factors are. We are not using any movies' descriptions
-    # data. We only have the movies' titles, movies IDs, and ratings from
-    # different users.
-    # The way to do it is to decompose a user's item rating matrix into 2 user
-    # matrices. One is the user-factor matrix and one is user-item matrix.
-    # Each row in the user-factor matrix maps the user onto the hidden factor.
-    # Each row in the user-item matrix maps the item onto the hidden factor.
-    # These factor may or may not have any meaning in real life. They might have some
-    # abstract meaning. We have no ideas until we have the right factorization.
-    # This operation will be pretty expensive because it will effectively give us
-    # the factor vectors needed to find the rating of any item by any user.
-    # It will only perform once and then we will have all the ratings for all the
-    # users. We then can update the matrix along the way.
-    # In the previous case, we only compute for only 1 user.
     def perform_matrix_factorization(self, R, K, steps=MF_STEPS,
                                      gamma=MF_GAMMA, lamda=MF_LAMDA):
         """
