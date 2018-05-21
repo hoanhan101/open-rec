@@ -2,7 +2,8 @@
     open_rec.py - Recommender Logic
     Author: Hoanh An (hoanhan@bennington.edu)
     Date: 03/17/18
-    Reference: https://goo.gl/2tXUUw
+    Reference: Udemy's Byte-Sized-Chunks: Recommendation Systems
+    (https://www.udemy.com/recommendation-systems/)
 """
 
 import warnings
