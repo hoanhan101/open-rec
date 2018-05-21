@@ -21,10 +21,6 @@ It is still a work in progress.
 - [x] Read from files (instead of waiting for worker to run) and serve them through web pages
 - [x] Use [TMDb API](https://www.themoviedb.org/documentation/api) to find posters
 
-**Ideas**
-
-
-
 **Issues**
 
 - [ ] Latent factor method is not working for user 101 -> cause deadlock
@@ -62,7 +58,8 @@ The dataset that I am using is [MovieLens 100K Datasets](https://grouplens.org/d
 
 **Other**
 - `build_data.py`: Handy program to train data across users.
-- `collaborative_filtering.py`: Straightforward implementation of collaborative filtering methods.
+- `collaborative_filtering.py`: Straightforward implementation of collaborative filtering methods
+  and other enhancements with more details comments.
 
 ## Flow
 
